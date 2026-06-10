@@ -26,6 +26,7 @@ import { Route as OrgBraceletsRouteImport } from './routes/org.bracelets'
 import { Route as LiveStatsRouteImport } from './routes/live.stats'
 import { Route as LiveStaffRouteImport } from './routes/live.staff'
 import { Route as LiveSecuriteRouteImport } from './routes/live.securite'
+import { Route as LiveRestaurationRouteImport } from './routes/live.restauration'
 import { Route as LivePlansRouteImport } from './routes/live.plans'
 import { Route as LiveParticipantsRouteImport } from './routes/live.participants'
 import { Route as LiveMessagesRouteImport } from './routes/live.messages'
@@ -122,6 +123,11 @@ const LiveSecuriteRoute = LiveSecuriteRouteImport.update({
   path: '/securite',
   getParentRoute: () => LiveRoute,
 } as any)
+const LiveRestaurationRoute = LiveRestaurationRouteImport.update({
+  id: '/restauration',
+  path: '/restauration',
+  getParentRoute: () => LiveRoute,
+} as any)
 const LivePlansRoute = LivePlansRouteImport.update({
   id: '/plans',
   path: '/plans',
@@ -187,6 +193,7 @@ export interface FileRoutesByFullPath {
   '/live/messages': typeof LiveMessagesRoute
   '/live/participants': typeof LiveParticipantsRoute
   '/live/plans': typeof LivePlansRoute
+  '/live/restauration': typeof LiveRestaurationRoute
   '/live/securite': typeof LiveSecuriteRoute
   '/live/staff': typeof LiveStaffRoute
   '/live/stats': typeof LiveStatsRoute
@@ -214,6 +221,7 @@ export interface FileRoutesByTo {
   '/live/messages': typeof LiveMessagesRoute
   '/live/participants': typeof LiveParticipantsRoute
   '/live/plans': typeof LivePlansRoute
+  '/live/restauration': typeof LiveRestaurationRoute
   '/live/securite': typeof LiveSecuriteRoute
   '/live/staff': typeof LiveStaffRoute
   '/live/stats': typeof LiveStatsRoute
@@ -244,6 +252,7 @@ export interface FileRoutesById {
   '/live/messages': typeof LiveMessagesRoute
   '/live/participants': typeof LiveParticipantsRoute
   '/live/plans': typeof LivePlansRoute
+  '/live/restauration': typeof LiveRestaurationRoute
   '/live/securite': typeof LiveSecuriteRoute
   '/live/staff': typeof LiveStaffRoute
   '/live/stats': typeof LiveStatsRoute
@@ -275,6 +284,7 @@ export interface FileRouteTypes {
     | '/live/messages'
     | '/live/participants'
     | '/live/plans'
+    | '/live/restauration'
     | '/live/securite'
     | '/live/staff'
     | '/live/stats'
@@ -302,6 +312,7 @@ export interface FileRouteTypes {
     | '/live/messages'
     | '/live/participants'
     | '/live/plans'
+    | '/live/restauration'
     | '/live/securite'
     | '/live/staff'
     | '/live/stats'
@@ -331,6 +342,7 @@ export interface FileRouteTypes {
     | '/live/messages'
     | '/live/participants'
     | '/live/plans'
+    | '/live/restauration'
     | '/live/securite'
     | '/live/staff'
     | '/live/stats'
@@ -475,6 +487,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LiveSecuriteRouteImport
       parentRoute: typeof LiveRoute
     }
+    '/live/restauration': {
+      id: '/live/restauration'
+      path: '/restauration'
+      fullPath: '/live/restauration'
+      preLoaderRoute: typeof LiveRestaurationRouteImport
+      parentRoute: typeof LiveRoute
+    }
     '/live/plans': {
       id: '/live/plans'
       path: '/plans'
@@ -559,6 +578,7 @@ interface LiveRouteChildren {
   LiveMessagesRoute: typeof LiveMessagesRoute
   LiveParticipantsRoute: typeof LiveParticipantsRoute
   LivePlansRoute: typeof LivePlansRoute
+  LiveRestaurationRoute: typeof LiveRestaurationRoute
   LiveSecuriteRoute: typeof LiveSecuriteRoute
   LiveStaffRoute: typeof LiveStaffRoute
   LiveStatsRoute: typeof LiveStatsRoute
@@ -576,6 +596,7 @@ const LiveRouteChildren: LiveRouteChildren = {
   LiveMessagesRoute: LiveMessagesRoute,
   LiveParticipantsRoute: LiveParticipantsRoute,
   LivePlansRoute: LivePlansRoute,
+  LiveRestaurationRoute: LiveRestaurationRoute,
   LiveSecuriteRoute: LiveSecuriteRoute,
   LiveStaffRoute: LiveStaffRoute,
   LiveStatsRoute: LiveStatsRoute,
