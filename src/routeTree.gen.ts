@@ -9,38 +9,188 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as OrgRouteImport } from './routes/org'
+import { Route as LiveRouteImport } from './routes/live'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as OrgIndexRouteImport } from './routes/org.index'
+import { Route as OrgStaffRouteImport } from './routes/org.staff'
+import { Route as OrgSettingsRouteImport } from './routes/org.settings'
+import { Route as OrgParticipantsRouteImport } from './routes/org.participants'
+import { Route as OrgModulesRouteImport } from './routes/org.modules'
+import { Route as OrgImportRouteImport } from './routes/org.import'
+import { Route as OrgDevisRouteImport } from './routes/org.devis'
+import { Route as OrgDesignRouteImport } from './routes/org.design'
+import { Route as OrgBraceletsRouteImport } from './routes/org.bracelets'
 
+const OrgRoute = OrgRouteImport.update({
+  id: '/org',
+  path: '/org',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LiveRoute = LiveRouteImport.update({
+  id: '/live',
+  path: '/live',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OrgIndexRoute = OrgIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => OrgRoute,
+} as any)
+const OrgStaffRoute = OrgStaffRouteImport.update({
+  id: '/staff',
+  path: '/staff',
+  getParentRoute: () => OrgRoute,
+} as any)
+const OrgSettingsRoute = OrgSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => OrgRoute,
+} as any)
+const OrgParticipantsRoute = OrgParticipantsRouteImport.update({
+  id: '/participants',
+  path: '/participants',
+  getParentRoute: () => OrgRoute,
+} as any)
+const OrgModulesRoute = OrgModulesRouteImport.update({
+  id: '/modules',
+  path: '/modules',
+  getParentRoute: () => OrgRoute,
+} as any)
+const OrgImportRoute = OrgImportRouteImport.update({
+  id: '/import',
+  path: '/import',
+  getParentRoute: () => OrgRoute,
+} as any)
+const OrgDevisRoute = OrgDevisRouteImport.update({
+  id: '/devis',
+  path: '/devis',
+  getParentRoute: () => OrgRoute,
+} as any)
+const OrgDesignRoute = OrgDesignRouteImport.update({
+  id: '/design',
+  path: '/design',
+  getParentRoute: () => OrgRoute,
+} as any)
+const OrgBraceletsRoute = OrgBraceletsRouteImport.update({
+  id: '/bracelets',
+  path: '/bracelets',
+  getParentRoute: () => OrgRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/live': typeof LiveRoute
+  '/org': typeof OrgRouteWithChildren
+  '/org/bracelets': typeof OrgBraceletsRoute
+  '/org/design': typeof OrgDesignRoute
+  '/org/devis': typeof OrgDevisRoute
+  '/org/import': typeof OrgImportRoute
+  '/org/modules': typeof OrgModulesRoute
+  '/org/participants': typeof OrgParticipantsRoute
+  '/org/settings': typeof OrgSettingsRoute
+  '/org/staff': typeof OrgStaffRoute
+  '/org/': typeof OrgIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/live': typeof LiveRoute
+  '/org/bracelets': typeof OrgBraceletsRoute
+  '/org/design': typeof OrgDesignRoute
+  '/org/devis': typeof OrgDevisRoute
+  '/org/import': typeof OrgImportRoute
+  '/org/modules': typeof OrgModulesRoute
+  '/org/participants': typeof OrgParticipantsRoute
+  '/org/settings': typeof OrgSettingsRoute
+  '/org/staff': typeof OrgStaffRoute
+  '/org': typeof OrgIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/live': typeof LiveRoute
+  '/org': typeof OrgRouteWithChildren
+  '/org/bracelets': typeof OrgBraceletsRoute
+  '/org/design': typeof OrgDesignRoute
+  '/org/devis': typeof OrgDevisRoute
+  '/org/import': typeof OrgImportRoute
+  '/org/modules': typeof OrgModulesRoute
+  '/org/participants': typeof OrgParticipantsRoute
+  '/org/settings': typeof OrgSettingsRoute
+  '/org/staff': typeof OrgStaffRoute
+  '/org/': typeof OrgIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/live'
+    | '/org'
+    | '/org/bracelets'
+    | '/org/design'
+    | '/org/devis'
+    | '/org/import'
+    | '/org/modules'
+    | '/org/participants'
+    | '/org/settings'
+    | '/org/staff'
+    | '/org/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/live'
+    | '/org/bracelets'
+    | '/org/design'
+    | '/org/devis'
+    | '/org/import'
+    | '/org/modules'
+    | '/org/participants'
+    | '/org/settings'
+    | '/org/staff'
+    | '/org'
+  id:
+    | '__root__'
+    | '/'
+    | '/live'
+    | '/org'
+    | '/org/bracelets'
+    | '/org/design'
+    | '/org/devis'
+    | '/org/import'
+    | '/org/modules'
+    | '/org/participants'
+    | '/org/settings'
+    | '/org/staff'
+    | '/org/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  LiveRoute: typeof LiveRoute
+  OrgRoute: typeof OrgRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/org': {
+      id: '/org'
+      path: '/org'
+      fullPath: '/org'
+      preLoaderRoute: typeof OrgRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/live': {
+      id: '/live'
+      path: '/live'
+      fullPath: '/live'
+      preLoaderRoute: typeof LiveRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,12 +198,113 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/org/': {
+      id: '/org/'
+      path: '/'
+      fullPath: '/org/'
+      preLoaderRoute: typeof OrgIndexRouteImport
+      parentRoute: typeof OrgRoute
+    }
+    '/org/staff': {
+      id: '/org/staff'
+      path: '/staff'
+      fullPath: '/org/staff'
+      preLoaderRoute: typeof OrgStaffRouteImport
+      parentRoute: typeof OrgRoute
+    }
+    '/org/settings': {
+      id: '/org/settings'
+      path: '/settings'
+      fullPath: '/org/settings'
+      preLoaderRoute: typeof OrgSettingsRouteImport
+      parentRoute: typeof OrgRoute
+    }
+    '/org/participants': {
+      id: '/org/participants'
+      path: '/participants'
+      fullPath: '/org/participants'
+      preLoaderRoute: typeof OrgParticipantsRouteImport
+      parentRoute: typeof OrgRoute
+    }
+    '/org/modules': {
+      id: '/org/modules'
+      path: '/modules'
+      fullPath: '/org/modules'
+      preLoaderRoute: typeof OrgModulesRouteImport
+      parentRoute: typeof OrgRoute
+    }
+    '/org/import': {
+      id: '/org/import'
+      path: '/import'
+      fullPath: '/org/import'
+      preLoaderRoute: typeof OrgImportRouteImport
+      parentRoute: typeof OrgRoute
+    }
+    '/org/devis': {
+      id: '/org/devis'
+      path: '/devis'
+      fullPath: '/org/devis'
+      preLoaderRoute: typeof OrgDevisRouteImport
+      parentRoute: typeof OrgRoute
+    }
+    '/org/design': {
+      id: '/org/design'
+      path: '/design'
+      fullPath: '/org/design'
+      preLoaderRoute: typeof OrgDesignRouteImport
+      parentRoute: typeof OrgRoute
+    }
+    '/org/bracelets': {
+      id: '/org/bracelets'
+      path: '/bracelets'
+      fullPath: '/org/bracelets'
+      preLoaderRoute: typeof OrgBraceletsRouteImport
+      parentRoute: typeof OrgRoute
+    }
   }
 }
 
+interface OrgRouteChildren {
+  OrgBraceletsRoute: typeof OrgBraceletsRoute
+  OrgDesignRoute: typeof OrgDesignRoute
+  OrgDevisRoute: typeof OrgDevisRoute
+  OrgImportRoute: typeof OrgImportRoute
+  OrgModulesRoute: typeof OrgModulesRoute
+  OrgParticipantsRoute: typeof OrgParticipantsRoute
+  OrgSettingsRoute: typeof OrgSettingsRoute
+  OrgStaffRoute: typeof OrgStaffRoute
+  OrgIndexRoute: typeof OrgIndexRoute
+}
+
+const OrgRouteChildren: OrgRouteChildren = {
+  OrgBraceletsRoute: OrgBraceletsRoute,
+  OrgDesignRoute: OrgDesignRoute,
+  OrgDevisRoute: OrgDevisRoute,
+  OrgImportRoute: OrgImportRoute,
+  OrgModulesRoute: OrgModulesRoute,
+  OrgParticipantsRoute: OrgParticipantsRoute,
+  OrgSettingsRoute: OrgSettingsRoute,
+  OrgStaffRoute: OrgStaffRoute,
+  OrgIndexRoute: OrgIndexRoute,
+}
+
+const OrgRouteWithChildren = OrgRoute._addFileChildren(OrgRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  LiveRoute: LiveRoute,
+  OrgRoute: OrgRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
