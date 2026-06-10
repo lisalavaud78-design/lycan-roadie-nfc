@@ -118,10 +118,12 @@ function AiAssistant() {
           </div>
         </div>
         <div className="border-t border-border pt-3 space-y-1.5 text-sm">
+          <Row k="Options fixes" v={`${quote.optionsFixes.toFixed(0)} €`} />
+          <Row k="Matière" v={`${quote.matiere.toFixed(0)} €`} />
           <Row k="Total HT" v={`${quote.totalHT.toFixed(0)} €`} />
           <Row k="TVA 20%" v={`${quote.tva.toFixed(0)} €`} />
           <Row k="Total TTC" v={`${quote.totalTTC.toFixed(0)} €`} bold />
-          <Row k="Coût/pers" v={`${quote.coutMoyen.toFixed(2)} €`} />
+          <Row k="Coût/pers" v={`${quote.coutParParticipant.toFixed(2)} €`} />
         </div>
       </aside>
     </div>

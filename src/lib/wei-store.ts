@@ -1,7 +1,7 @@
 // Local persistent store for LYCAN WEI NFC (no backend, localStorage based)
 import { useSyncExternalStore } from "react";
 
-export type Role = "participant" | "staff_bde" | "staff_bda" | "staff_asint" | "securite" | "paps" | "funbreak" | "vip" | "prestataire";
+export type Role = "participant" | "staff_bde" | "staff_bda" | "staff_asint" | "securite" | "paps" | "funbreak" | "vip" | "prestataire" | "bar";
 export type School = "TSP" | "IMT-BS";
 
 export interface Bracelet {
@@ -47,6 +47,17 @@ export interface StaffMessage {
   text: string;
 }
 
+export interface ScanLog {
+  id: string;
+  ts: string;
+  braceletId: string;
+  prenom: string;
+  type: "entree" | "ticket" | "fort" | "repas" | "goodies" | "activite" | "bus" | "logement" | "double_scan";
+  lieu: string;
+  ok: boolean;
+  detail: string;
+}
+
 export interface ChatMessage {
   id: string;
   ts: string;
@@ -54,6 +65,7 @@ export interface ChatMessage {
   text: string;
 }
 
+// All 35 functional modules from the spec — each is a FIXED cost per event
 export interface ModulesConfig {
   billet: boolean;
   identite: boolean;
@@ -63,13 +75,32 @@ export interface ModulesConfig {
   parking: boolean;
   plan: boolean;
   logistique: boolean;
+  adn: boolean;
   parental: boolean;
+  reseaux: boolean;
   reservations: boolean;
   transport: boolean;
   cashless: boolean;
+  coordonnees_pro: boolean;
+  carte_visite: boolean;
+  carte_vitale: boolean;
+  directives_medicales: boolean;
+  contact_senior: boolean;
+  tuteur: boolean;
+  plan_soin: boolean;
   carte_etudiante: boolean;
   planning: boolean;
+  acces_batiment: boolean;
+  cv: boolean;
+  linkedin: boolean;
   photos: boolean;
+  reservation_salle: boolean;
+  certif_medical: boolean;
+  carte_grise: boolean;
+  assurance: boolean;
+  carnet_entretien: boolean;
+  passeport_num: boolean;
+  portfolio: boolean;
   site_web: boolean;
 }
 
@@ -86,10 +117,11 @@ export interface WeiState {
   bracelets: Bracelet[];
   alerts: Alert[];
   messages: StaffMessage[];
+  scans: ScanLog[];
   chat: ChatMessage[];
 }
 
-const STORAGE_KEY = "lycan-wei-state-v1";
+const STORAGE_KEY = "lycan-wei-state-v3";
 
 const PRENOMS = ["Lucas", "Emma", "Hugo", "Léa", "Nathan", "Chloé", "Tom", "Sarah", "Jules", "Manon", "Théo", "Camille", "Antoine", "Inès", "Maxime", "Clara", "Paul", "Louise", "Arthur", "Alice", "Ethan", "Romane", "Adam", "Jade", "Raphaël", "Mila", "Léo", "Anaïs", "Gabriel", "Eva"];
 const NOMS = ["Martin", "Bernard", "Dubois", "Thomas", "Robert", "Petit", "Richard", "Durand", "Leroy", "Moreau", "Simon", "Laurent", "Lefebvre", "Michel", "Garcia", "David", "Bertrand", "Roux", "Vincent", "Fournier"];
@@ -132,18 +164,81 @@ function seed(): WeiState {
   const config = { nbParticipants: 350, nbStaff: 40, nbBus: 6, ticketsConsoParPart: 3, uniteFortParPart: 1, designColor: "electric" };
   const modules: ModulesConfig = {
     billet: true, identite: true, medical: true, urgence: true, partenaires: false, parking: true,
-    plan: true, logistique: true, parental: false, reservations: true, transport: true, cashless: true,
-    carte_etudiante: false, planning: true, photos: true, site_web: false,
+    plan: true, logistique: true, adn: false, parental: false, reseaux: false, reservations: true,
+    transport: true, cashless: true, coordonnees_pro: false, carte_visite: false, carte_vitale: false,
+    directives_medicales: false, contact_senior: false, tuteur: false, plan_soin: false,
+    carte_etudiante: false, planning: true, acces_batiment: false, cv: false, linkedin: false,
+    photos: true, reservation_salle: false, certif_medical: false, carte_grise: false,
+    assurance: false, carnet_entretien: false, passeport_num: false, portfolio: false, site_web: false,
   };
-  // Generate a smaller initial pool — full 350 generated on demand
   const bracelets: Bracelet[] = [];
   for (let i = 0; i < 60; i++) bracelets.push(makeBracelet("participant", i));
-  for (let i = 0; i < 8; i++) bracelets.push(makeBracelet(i < 3 ? "staff_bde" : i < 5 ? "staff_bda" : i < 6 ? "securite" : "paps", i));
+  const staffRoles: Role[] = ["staff_bde", "staff_bde", "staff_bde", "staff_bda", "staff_bda", "staff_asint", "staff_asint", "securite", "securite", "paps", "paps", "funbreak", "bar", "bar"];
+  staffRoles.forEach((r, i) => bracelets.push(makeBracelet(r, i)));
+
+  // Seed some used tickets / consumption for live realism
+  for (let i = 0; i < 20; i++) {
+    const b = bracelets[i];
+    b.tickets_conso[0].used = true;
+    b.tickets_conso[0].usedAt = new Date(Date.now() - Math.random() * 4 * 3600_000).toISOString();
+    b.tickets_conso[0].lieu = ["Bar central", "Bar techno", "Bar pop/rap"][i % 3];
+    if (i < 10) {
+      b.tickets_conso[1].used = true;
+      b.tickets_conso[1].usedAt = new Date(Date.now() - Math.random() * 2 * 3600_000).toISOString();
+      b.tickets_conso[1].lieu = "Bar central";
+    }
+    if (i < 5) {
+      b.unite_fort.used = true;
+      b.unite_fort.usedAt = new Date(Date.now() - Math.random() * 3600_000).toISOString();
+      b.unite_fort.lieu = "Bar central";
+    }
+    b.checkin.general = true;
+    if (i < 40) b.checkin.bus = true;
+    if (i < 35) b.checkin.logement = true;
+  }
+  // Seed some medical info
+  bracelets[2].medical.allergies = "Arachides, fruits à coque";
+  bracelets[5].medical.traitements = "Ventoline (asthme)";
+  bracelets[8].medical.allergies = "Pénicilline";
+  bracelets[12].medical.traitements = "Antihistaminique";
+
+  // Seed alerts
+  const alerts: Alert[] = [
+    { id: "AL-1", type: "malaise", braceletId: bracelets[3].id, prenom: bracelets[3].prenom, lieu: "Soirée techno", ts: new Date(Date.now() - 25 * 60_000).toISOString(), priorite: "haute", statut: "en_cours", notes: "Malaise, prise en charge PAPS", staffAssigne: "PAPS-2" },
+    { id: "AL-2", type: "perdu", braceletId: bracelets[7].id, prenom: bracelets[7].prenom, lieu: "Camping zone B", ts: new Date(Date.now() - 60 * 60_000).toISOString(), priorite: "moyenne", statut: "ouverte", notes: "Personne perdue, recherche en cours" },
+    { id: "AL-3", type: "logement", braceletId: bracelets[11].id, prenom: bracelets[11].prenom, lieu: "Bungalow B05", ts: new Date(Date.now() - 90 * 60_000).toISOString(), priorite: "basse", statut: "cloturee", notes: "Problème de clé résolu" },
+    { id: "AL-4", type: "alcool", braceletId: bracelets[15].id, prenom: bracelets[15].prenom, lieu: "Bar central", ts: new Date(Date.now() - 10 * 60_000).toISOString(), priorite: "moyenne", statut: "ouverte", notes: "Alcoolisation excessive signalée par le bar" },
+    { id: "AL-5", type: "blessure", braceletId: bracelets[18].id, prenom: bracelets[18].prenom, lieu: "Taureau mécanique", ts: new Date(Date.now() - 3 * 3600_000).toISOString(), priorite: "moyenne", statut: "cloturee", notes: "Petite entorse, soins PAPS" },
+    { id: "AL-6", type: "piqure", braceletId: bracelets[22].id, prenom: bracelets[22].prenom, lieu: "Soirée pop/rap", ts: new Date(Date.now() - 45 * 60_000).toISOString(), priorite: "haute", statut: "en_cours", notes: "Suspicion piqûre, protocole déclenché" },
+  ];
+
+  // Seed messages staff
+  const messages: StaffMessage[] = [
+    { id: "M-1", ts: new Date(Date.now() - 5 * 60_000).toISOString(), from: "Coord BDE", to: "tous", text: "Briefing staff 21h salle principale." },
+    { id: "M-2", ts: new Date(Date.now() - 15 * 60_000).toISOString(), from: "Bar central", to: "bar", text: "Plus de bières blondes, reset stock 22h." },
+    { id: "M-3", ts: new Date(Date.now() - 30 * 60_000).toISOString(), from: "PAPS", to: "securite", text: "Renfort demandé zone scène techno." },
+    { id: "M-4", ts: new Date(Date.now() - 60 * 60_000).toISOString(), from: "Bus 3", to: "tous", text: "Tous les passagers présents, départ OK." },
+  ];
+
+  // Seed scan logs
+  const scans: ScanLog[] = [];
+  for (let i = 0; i < 25; i++) {
+    const b = bracelets[Math.floor(Math.random() * 40)];
+    const types: ScanLog["type"][] = ["ticket", "entree", "repas", "fort", "bus", "ticket", "ticket"];
+    const t = types[i % types.length];
+    scans.push({
+      id: `S-${i}`,
+      ts: new Date(Date.now() - i * 7 * 60_000).toISOString(),
+      braceletId: b.id, prenom: b.prenom,
+      type: t,
+      lieu: ["Bar central", "Bar techno", "Bar pop/rap", "Entrée soirée", "Cantine"][i % 5],
+      ok: i % 13 !== 0,
+      detail: t === "ticket" ? "Ticket conso utilisé" : t === "fort" ? "Unité fort utilisée" : t === "entree" ? "Entrée soirée" : t === "repas" ? "Repas récupéré" : "Scan bus",
+    });
+  }
 
   return {
-    config, modules, bracelets,
-    alerts: [],
-    messages: [],
+    config, modules, bracelets, alerts, messages, scans,
     chat: [{
       id: "msg-0", ts: new Date().toISOString(), role: "assistant",
       text: "Salut ! Je suis l'assistant IA du WEI Lycan. Dis-moi ce que tu veux configurer : nombre de participants, bus, tickets conso, modules NFC, génération de bracelets, devis…"
@@ -181,6 +276,10 @@ export function useWei<T>(selector: (s: WeiState) => T): T {
   return useSyncExternalStore(weiStore.subscribe, () => selector(state), () => selector(state));
 }
 
+function logScan(s: WeiState, scan: Omit<ScanLog, "id" | "ts">): ScanLog[] {
+  return [{ ...scan, id: `S-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`, ts: new Date().toISOString() }, ...s.scans].slice(0, 500);
+}
+
 // Actions
 export const actions = {
   setConfig(patch: Partial<WeiState["config"]>) {
@@ -199,33 +298,53 @@ export const actions = {
   updateBracelet(id: string, patch: Partial<Bracelet>) {
     weiStore.set((s) => ({ ...s, bracelets: s.bracelets.map((b) => (b.id === id ? { ...b, ...patch } : b)) }));
   },
-  useTicket(braceletId: string, ticketId: string, lieu = "Bar principal") {
-    weiStore.set((s) => ({
-      ...s,
-      bracelets: s.bracelets.map((b) => {
-        if (b.id !== braceletId) return b;
-        const t = b.tickets_conso.find((x) => x.id === ticketId);
-        if (!t || t.used) return b;
-        return {
-          ...b,
-          tickets_conso: b.tickets_conso.map((x) => (x.id === ticketId ? { ...x, used: true, usedAt: new Date().toISOString(), lieu } : x)),
-          history: [...b.history, { ts: new Date().toISOString(), type: "conso", detail: `Ticket ${ticketId} utilisé à ${lieu}` }],
-        };
-      }),
-    }));
+  deleteBracelet(id: string) {
+    weiStore.set((s) => ({ ...s, bracelets: s.bracelets.filter((b) => b.id !== id) }));
   },
-  useUniteFort(braceletId: string, lieu = "Bar principal") {
-    weiStore.set((s) => ({
-      ...s,
-      bracelets: s.bracelets.map((b) => {
-        if (b.id !== braceletId || b.unite_fort.used) return b;
-        return {
-          ...b,
+  useTicket(braceletId: string, ticketId: string, lieu = "Bar central") {
+    weiStore.set((s) => {
+      const b = s.bracelets.find((x) => x.id === braceletId);
+      if (!b) return s;
+      const t = b.tickets_conso.find((x) => x.id === ticketId);
+      if (!t) return s;
+      if (t.used) {
+        return { ...s, scans: logScan(s, { braceletId, prenom: b.prenom, type: "double_scan", lieu, ok: false, detail: `Tentative de double scan ticket ${ticketId}` }) };
+      }
+      return {
+        ...s,
+        bracelets: s.bracelets.map((bb) => bb.id !== braceletId ? bb : {
+          ...bb,
+          tickets_conso: bb.tickets_conso.map((x) => (x.id === ticketId ? { ...x, used: true, usedAt: new Date().toISOString(), lieu } : x)),
+          history: [...bb.history, { ts: new Date().toISOString(), type: "conso", detail: `Ticket ${ticketId} utilisé à ${lieu}` }],
+        }),
+        scans: logScan(s, { braceletId, prenom: b.prenom, type: "ticket", lieu, ok: true, detail: `Ticket ${ticketId} utilisé` }),
+      };
+    });
+  },
+  useUniteFort(braceletId: string, lieu = "Bar central") {
+    weiStore.set((s) => {
+      const b = s.bracelets.find((x) => x.id === braceletId);
+      if (!b) return s;
+      if (b.unite_fort.used) {
+        return { ...s, scans: logScan(s, { braceletId, prenom: b.prenom, type: "double_scan", lieu, ok: false, detail: "Tentative double scan unité fort" }) };
+      }
+      return {
+        ...s,
+        bracelets: s.bracelets.map((bb) => bb.id !== braceletId ? bb : {
+          ...bb,
           unite_fort: { used: true, usedAt: new Date().toISOString(), lieu },
-          history: [...b.history, { ts: new Date().toISOString(), type: "conso_fort", detail: `Unité fort utilisée à ${lieu}` }],
-        };
-      }),
-    }));
+          history: [...bb.history, { ts: new Date().toISOString(), type: "conso_fort", detail: `Unité fort utilisée à ${lieu}` }],
+        }),
+        scans: logScan(s, { braceletId, prenom: b.prenom, type: "fort", lieu, ok: true, detail: "Unité fort utilisée" }),
+      };
+    });
+  },
+  scanEntree(braceletId: string, lieu = "Entrée soirée") {
+    weiStore.set((s) => {
+      const b = s.bracelets.find((x) => x.id === braceletId);
+      if (!b) return { ...s, scans: logScan(s, { braceletId, prenom: "?", type: "entree", lieu, ok: false, detail: "Bracelet inconnu" }) };
+      return { ...s, scans: logScan(s, { braceletId, prenom: b.prenom, type: "entree", lieu, ok: true, detail: "Entrée OK" }) };
+    });
   },
   addAlert(a: Omit<Alert, "id" | "ts" | "statut">) {
     weiStore.set((s) => ({
@@ -235,6 +354,9 @@ export const actions = {
   },
   updateAlert(id: string, patch: Partial<Alert>) {
     weiStore.set((s) => ({ ...s, alerts: s.alerts.map((a) => (a.id === id ? { ...a, ...patch } : a)) }));
+  },
+  deleteAlert(id: string) {
+    weiStore.set((s) => ({ ...s, alerts: s.alerts.filter((a) => a.id !== id) }));
   },
   sendMessage(m: Omit<StaffMessage, "id" | "ts">) {
     weiStore.set((s) => ({ ...s, messages: [{ ...m, id: `M-${Date.now()}`, ts: new Date().toISOString() }, ...s.messages] }));
@@ -248,38 +370,103 @@ export const actions = {
   resetAll() { weiStore.reset(); },
 };
 
-// Pricing
+// Pricing — FIXED costs per event (not multiplied by bracelets)
 export const PRICES: Record<keyof ModulesConfig, number> = {
   billet: 5, identite: 3, medical: 10, urgence: 5, partenaires: 3, parking: 3,
-  plan: 3, logistique: 3, parental: 3, reservations: 2, transport: 4, cashless: 10,
-  carte_etudiante: 2, planning: 2, photos: 8, site_web: 2,
+  plan: 3, logistique: 3, adn: 7, parental: 3, reseaux: 2, reservations: 2,
+  transport: 4, cashless: 10, coordonnees_pro: 7, carte_visite: 2, carte_vitale: 10,
+  directives_medicales: 6, contact_senior: 3, tuteur: 4, plan_soin: 4,
+  carte_etudiante: 2, planning: 2, acces_batiment: 4, cv: 2, linkedin: 2,
+  photos: 8, reservation_salle: 3, certif_medical: 3, carte_grise: 10,
+  assurance: 10, carnet_entretien: 6, passeport_num: 10, portfolio: 3, site_web: 2,
 };
 
 export const MODULE_LABELS: Record<keyof ModulesConfig, string> = {
-  billet: "Billet & coupe-file", identite: "Identité participant", medical: "Infos médicales",
-  urgence: "Contact d'urgence", partenaires: "Réductions partenaires", parking: "Accès parking/camping",
-  plan: "Plan interactif", logistique: "Infos logistiques", parental: "Autorisation parentale",
-  reservations: "Réservations", transport: "Infos transport", cashless: "Paiement cashless",
-  carte_etudiante: "Carte étudiante", planning: "Emploi du temps", photos: "Photos événement",
+  billet: "Billet & accès coupe-file",
+  identite: "Identité du participant",
+  medical: "Infos médicales",
+  urgence: "Contact d'urgence",
+  partenaires: "Réductions partenaires",
+  parking: "Accès parking / camping",
+  plan: "Plan interactif",
+  logistique: "Infos logistiques",
+  adn: "Document ADN",
+  parental: "Autorisation parentale",
+  reseaux: "Lien réseaux sociaux",
+  reservations: "Réservations",
+  transport: "Informations transport",
+  cashless: "Paiement cashless",
+  coordonnees_pro: "Coordonnées professionnelles",
+  carte_visite: "Carte de visite numérique",
+  carte_vitale: "Carte Vitale numérique",
+  directives_medicales: "Directives médicales",
+  contact_senior: "Contact établissement senior",
+  tuteur: "Numéro du tuteur",
+  plan_soin: "Plan de soin",
+  carte_etudiante: "Carte étudiante",
+  planning: "Emploi du temps",
+  acces_batiment: "Accès bâtiment",
+  cv: "CV",
+  linkedin: "LinkedIn",
+  photos: "Photos événement",
+  reservation_salle: "Réservation de salle",
+  certif_medical: "Certificat médical",
+  carte_grise: "Carte grise",
+  assurance: "Assurance",
+  carnet_entretien: "Carnet d'entretien",
+  passeport_num: "Passeport numérique",
+  portfolio: "Portfolio",
   site_web: "Site web",
+};
+
+export const MODULE_CATEGORIES: Record<string, (keyof ModulesConfig)[]> = {
+  "Événement WEI": ["billet", "identite", "medical", "urgence", "parking", "plan", "logistique", "reservations", "transport", "cashless", "photos", "partenaires", "parental", "reseaux"],
+  "Étudiant": ["carte_etudiante", "planning", "acces_batiment", "cv", "linkedin", "reservation_salle", "certif_medical"],
+  "Professionnel": ["coordonnees_pro", "carte_visite", "portfolio", "site_web"],
+  "Santé": ["carte_vitale", "directives_medicales", "plan_soin"],
+  "Senior": ["contact_senior", "tuteur"],
+  "Véhicule": ["carte_grise", "assurance", "carnet_entretien", "passeport_num"],
+  "Spécial": ["adn"],
 };
 
 export function computeQuote(s: WeiState) {
   const activeModules = (Object.keys(s.modules) as (keyof ModulesConfig)[]).filter((k) => s.modules[k]);
-  const moduleTotal = activeModules.reduce((sum, k) => sum + PRICES[k], 0);
+
+  // FIXED option costs — each module is a one-time fee per event
+  const optionsFixes = activeModules.reduce((sum, k) => sum + PRICES[k], 0);
+
+  // Variable per-bracelet matter costs
   const totalBracelets = s.config.nbParticipants + s.config.nbStaff;
-  const tissuCost = totalBracelets * 0.89;
-  const chipUnit = totalBracelets >= 1000 ? 0.2 : totalBracelets >= 100 ? 0.35 : 0.5;
+  const tissuUnit = 0.89;
+  const tissuCost = totalBracelets * tissuUnit;
+  const chipUnit = totalBracelets >= 1000 ? 0.2 : totalBracelets >= 500 ? 0.3 : totalBracelets >= 100 ? 0.4 : 0.5;
   const chipCost = totalBracelets * chipUnit;
-  const impressionCost = totalBracelets * 0.18;
+  const impressionUnit = 0.2;
+  const impressionCost = totalBracelets * impressionUnit;
   const matiere = tissuCost + chipCost + impressionCost;
-  const htParPart = moduleTotal;
-  const totalHT = htParPart * s.config.nbParticipants;
+
+  const totalHT = optionsFixes + matiere;
   const tva = totalHT * 0.2;
   const totalTTC = totalHT + tva;
   const marge = totalHT - matiere;
-  const coutMoyen = totalTTC / Math.max(s.config.nbParticipants, 1);
-  return { activeModules, moduleTotal, totalBracelets, tissuCost, chipCost, impressionCost, matiere, htParPart, totalHT, tva, totalTTC, marge, coutMoyen };
+  const coutParParticipant = totalTTC / Math.max(s.config.nbParticipants, 1);
+  const coutParBracelet = totalTTC / Math.max(totalBracelets, 1);
+
+  return {
+    activeModules,
+    optionsFixes,
+    totalBracelets,
+    tissuUnit, tissuCost,
+    chipUnit, chipCost,
+    impressionUnit, impressionCost,
+    matiere,
+    totalHT,
+    tva,
+    totalTTC,
+    marge,
+    coutParParticipant,
+    coutParBracelet,
+  };
 }
 
 // IA simulator
@@ -314,18 +501,18 @@ export function processAICommand(input: string): { reply: string; actions: strin
   } else if (/médical|medical|fiche/.test(t)) {
     actions.setModule("medical", true);
     acts.push("Module médical activé");
-    reply = "Fiche médicale activée (+10€/participant).";
+    reply = "Fiche médicale activée (+10€ fixe au devis).";
   } else if (/cashless|paiement/.test(t)) {
     actions.setModule("cashless", true);
     acts.push("Cashless activé");
-    reply = "Paiement cashless activé (+10€/participant).";
+    reply = "Paiement cashless activé (+10€ fixe au devis).";
   } else if (/soir[ée]e|accès soirée/.test(t)) {
     actions.setModule("billet", true);
     acts.push("Accès soirée activé");
     reply = "Accès soirée configuré via le module billet.";
   } else if (/devis|génér.*devis/.test(t)) {
     const q = computeQuote(state);
-    reply = `Devis : ${q.activeModules.length} modules actifs, ${q.totalHT.toFixed(0)}€ HT, ${q.totalTTC.toFixed(0)}€ TTC pour ${state.config.nbParticipants} participants. Coût moyen : ${q.coutMoyen.toFixed(2)}€/pers.`;
+    reply = `Devis : ${q.activeModules.length} options fixes (${q.optionsFixes}€) + matière ${q.matiere.toFixed(0)}€ = ${q.totalHT.toFixed(0)}€ HT, ${q.totalTTC.toFixed(0)}€ TTC. Coût/pers : ${q.coutParParticipant.toFixed(2)}€.`;
     acts.push("Devis recalculé");
   } else if (/génér.*bracelet/.test(t)) {
     const current = state.bracelets.filter((b) => b.role === "participant").length;

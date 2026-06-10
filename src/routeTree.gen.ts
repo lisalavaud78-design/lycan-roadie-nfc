@@ -17,6 +17,7 @@ import { Route as LiveIndexRouteImport } from './routes/live.index'
 import { Route as WBraceletIdRouteImport } from './routes/w.$braceletId'
 import { Route as OrgStaffRouteImport } from './routes/org.staff'
 import { Route as OrgSettingsRouteImport } from './routes/org.settings'
+import { Route as OrgScanRouteImport } from './routes/org.scan'
 import { Route as OrgParticipantsRouteImport } from './routes/org.participants'
 import { Route as OrgModulesRouteImport } from './routes/org.modules'
 import { Route as OrgImportRouteImport } from './routes/org.import'
@@ -26,12 +27,17 @@ import { Route as OrgBraceletsRouteImport } from './routes/org.bracelets'
 import { Route as LiveStatsRouteImport } from './routes/live.stats'
 import { Route as LiveStaffRouteImport } from './routes/live.staff'
 import { Route as LiveSecuriteRouteImport } from './routes/live.securite'
+import { Route as LiveRestaurationRouteImport } from './routes/live.restauration'
+import { Route as LivePlansRouteImport } from './routes/live.plans'
 import { Route as LiveParticipantsRouteImport } from './routes/live.participants'
 import { Route as LiveMessagesRouteImport } from './routes/live.messages'
 import { Route as LiveMedicalRouteImport } from './routes/live.medical'
 import { Route as LiveLogementsRouteImport } from './routes/live.logements'
+import { Route as LiveHistoriqueRouteImport } from './routes/live.historique'
+import { Route as LiveGoodiesRouteImport } from './routes/live.goodies'
 import { Route as LiveConsoRouteImport } from './routes/live.conso'
 import { Route as LiveBusRouteImport } from './routes/live.bus'
+import { Route as LiveAlertesRouteImport } from './routes/live.alertes'
 import { Route as LiveActivitesRouteImport } from './routes/live.activites'
 
 const OrgRoute = OrgRouteImport.update({
@@ -72,6 +78,11 @@ const OrgStaffRoute = OrgStaffRouteImport.update({
 const OrgSettingsRoute = OrgSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
+  getParentRoute: () => OrgRoute,
+} as any)
+const OrgScanRoute = OrgScanRouteImport.update({
+  id: '/scan',
+  path: '/scan',
   getParentRoute: () => OrgRoute,
 } as any)
 const OrgParticipantsRoute = OrgParticipantsRouteImport.update({
@@ -119,6 +130,16 @@ const LiveSecuriteRoute = LiveSecuriteRouteImport.update({
   path: '/securite',
   getParentRoute: () => LiveRoute,
 } as any)
+const LiveRestaurationRoute = LiveRestaurationRouteImport.update({
+  id: '/restauration',
+  path: '/restauration',
+  getParentRoute: () => LiveRoute,
+} as any)
+const LivePlansRoute = LivePlansRouteImport.update({
+  id: '/plans',
+  path: '/plans',
+  getParentRoute: () => LiveRoute,
+} as any)
 const LiveParticipantsRoute = LiveParticipantsRouteImport.update({
   id: '/participants',
   path: '/participants',
@@ -139,6 +160,16 @@ const LiveLogementsRoute = LiveLogementsRouteImport.update({
   path: '/logements',
   getParentRoute: () => LiveRoute,
 } as any)
+const LiveHistoriqueRoute = LiveHistoriqueRouteImport.update({
+  id: '/historique',
+  path: '/historique',
+  getParentRoute: () => LiveRoute,
+} as any)
+const LiveGoodiesRoute = LiveGoodiesRouteImport.update({
+  id: '/goodies',
+  path: '/goodies',
+  getParentRoute: () => LiveRoute,
+} as any)
 const LiveConsoRoute = LiveConsoRouteImport.update({
   id: '/conso',
   path: '/conso',
@@ -147,6 +178,11 @@ const LiveConsoRoute = LiveConsoRouteImport.update({
 const LiveBusRoute = LiveBusRouteImport.update({
   id: '/bus',
   path: '/bus',
+  getParentRoute: () => LiveRoute,
+} as any)
+const LiveAlertesRoute = LiveAlertesRouteImport.update({
+  id: '/alertes',
+  path: '/alertes',
   getParentRoute: () => LiveRoute,
 } as any)
 const LiveActivitesRoute = LiveActivitesRouteImport.update({
@@ -160,12 +196,17 @@ export interface FileRoutesByFullPath {
   '/live': typeof LiveRouteWithChildren
   '/org': typeof OrgRouteWithChildren
   '/live/activites': typeof LiveActivitesRoute
+  '/live/alertes': typeof LiveAlertesRoute
   '/live/bus': typeof LiveBusRoute
   '/live/conso': typeof LiveConsoRoute
+  '/live/goodies': typeof LiveGoodiesRoute
+  '/live/historique': typeof LiveHistoriqueRoute
   '/live/logements': typeof LiveLogementsRoute
   '/live/medical': typeof LiveMedicalRoute
   '/live/messages': typeof LiveMessagesRoute
   '/live/participants': typeof LiveParticipantsRoute
+  '/live/plans': typeof LivePlansRoute
+  '/live/restauration': typeof LiveRestaurationRoute
   '/live/securite': typeof LiveSecuriteRoute
   '/live/staff': typeof LiveStaffRoute
   '/live/stats': typeof LiveStatsRoute
@@ -175,6 +216,7 @@ export interface FileRoutesByFullPath {
   '/org/import': typeof OrgImportRoute
   '/org/modules': typeof OrgModulesRoute
   '/org/participants': typeof OrgParticipantsRoute
+  '/org/scan': typeof OrgScanRoute
   '/org/settings': typeof OrgSettingsRoute
   '/org/staff': typeof OrgStaffRoute
   '/w/$braceletId': typeof WBraceletIdRoute
@@ -184,12 +226,17 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/live/activites': typeof LiveActivitesRoute
+  '/live/alertes': typeof LiveAlertesRoute
   '/live/bus': typeof LiveBusRoute
   '/live/conso': typeof LiveConsoRoute
+  '/live/goodies': typeof LiveGoodiesRoute
+  '/live/historique': typeof LiveHistoriqueRoute
   '/live/logements': typeof LiveLogementsRoute
   '/live/medical': typeof LiveMedicalRoute
   '/live/messages': typeof LiveMessagesRoute
   '/live/participants': typeof LiveParticipantsRoute
+  '/live/plans': typeof LivePlansRoute
+  '/live/restauration': typeof LiveRestaurationRoute
   '/live/securite': typeof LiveSecuriteRoute
   '/live/staff': typeof LiveStaffRoute
   '/live/stats': typeof LiveStatsRoute
@@ -199,6 +246,7 @@ export interface FileRoutesByTo {
   '/org/import': typeof OrgImportRoute
   '/org/modules': typeof OrgModulesRoute
   '/org/participants': typeof OrgParticipantsRoute
+  '/org/scan': typeof OrgScanRoute
   '/org/settings': typeof OrgSettingsRoute
   '/org/staff': typeof OrgStaffRoute
   '/w/$braceletId': typeof WBraceletIdRoute
@@ -211,12 +259,17 @@ export interface FileRoutesById {
   '/live': typeof LiveRouteWithChildren
   '/org': typeof OrgRouteWithChildren
   '/live/activites': typeof LiveActivitesRoute
+  '/live/alertes': typeof LiveAlertesRoute
   '/live/bus': typeof LiveBusRoute
   '/live/conso': typeof LiveConsoRoute
+  '/live/goodies': typeof LiveGoodiesRoute
+  '/live/historique': typeof LiveHistoriqueRoute
   '/live/logements': typeof LiveLogementsRoute
   '/live/medical': typeof LiveMedicalRoute
   '/live/messages': typeof LiveMessagesRoute
   '/live/participants': typeof LiveParticipantsRoute
+  '/live/plans': typeof LivePlansRoute
+  '/live/restauration': typeof LiveRestaurationRoute
   '/live/securite': typeof LiveSecuriteRoute
   '/live/staff': typeof LiveStaffRoute
   '/live/stats': typeof LiveStatsRoute
@@ -226,6 +279,7 @@ export interface FileRoutesById {
   '/org/import': typeof OrgImportRoute
   '/org/modules': typeof OrgModulesRoute
   '/org/participants': typeof OrgParticipantsRoute
+  '/org/scan': typeof OrgScanRoute
   '/org/settings': typeof OrgSettingsRoute
   '/org/staff': typeof OrgStaffRoute
   '/w/$braceletId': typeof WBraceletIdRoute
@@ -239,12 +293,17 @@ export interface FileRouteTypes {
     | '/live'
     | '/org'
     | '/live/activites'
+    | '/live/alertes'
     | '/live/bus'
     | '/live/conso'
+    | '/live/goodies'
+    | '/live/historique'
     | '/live/logements'
     | '/live/medical'
     | '/live/messages'
     | '/live/participants'
+    | '/live/plans'
+    | '/live/restauration'
     | '/live/securite'
     | '/live/staff'
     | '/live/stats'
@@ -254,6 +313,7 @@ export interface FileRouteTypes {
     | '/org/import'
     | '/org/modules'
     | '/org/participants'
+    | '/org/scan'
     | '/org/settings'
     | '/org/staff'
     | '/w/$braceletId'
@@ -263,12 +323,17 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/live/activites'
+    | '/live/alertes'
     | '/live/bus'
     | '/live/conso'
+    | '/live/goodies'
+    | '/live/historique'
     | '/live/logements'
     | '/live/medical'
     | '/live/messages'
     | '/live/participants'
+    | '/live/plans'
+    | '/live/restauration'
     | '/live/securite'
     | '/live/staff'
     | '/live/stats'
@@ -278,6 +343,7 @@ export interface FileRouteTypes {
     | '/org/import'
     | '/org/modules'
     | '/org/participants'
+    | '/org/scan'
     | '/org/settings'
     | '/org/staff'
     | '/w/$braceletId'
@@ -289,12 +355,17 @@ export interface FileRouteTypes {
     | '/live'
     | '/org'
     | '/live/activites'
+    | '/live/alertes'
     | '/live/bus'
     | '/live/conso'
+    | '/live/goodies'
+    | '/live/historique'
     | '/live/logements'
     | '/live/medical'
     | '/live/messages'
     | '/live/participants'
+    | '/live/plans'
+    | '/live/restauration'
     | '/live/securite'
     | '/live/staff'
     | '/live/stats'
@@ -304,6 +375,7 @@ export interface FileRouteTypes {
     | '/org/import'
     | '/org/modules'
     | '/org/participants'
+    | '/org/scan'
     | '/org/settings'
     | '/org/staff'
     | '/w/$braceletId'
@@ -376,6 +448,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OrgSettingsRouteImport
       parentRoute: typeof OrgRoute
     }
+    '/org/scan': {
+      id: '/org/scan'
+      path: '/scan'
+      fullPath: '/org/scan'
+      preLoaderRoute: typeof OrgScanRouteImport
+      parentRoute: typeof OrgRoute
+    }
     '/org/participants': {
       id: '/org/participants'
       path: '/participants'
@@ -439,6 +518,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LiveSecuriteRouteImport
       parentRoute: typeof LiveRoute
     }
+    '/live/restauration': {
+      id: '/live/restauration'
+      path: '/restauration'
+      fullPath: '/live/restauration'
+      preLoaderRoute: typeof LiveRestaurationRouteImport
+      parentRoute: typeof LiveRoute
+    }
+    '/live/plans': {
+      id: '/live/plans'
+      path: '/plans'
+      fullPath: '/live/plans'
+      preLoaderRoute: typeof LivePlansRouteImport
+      parentRoute: typeof LiveRoute
+    }
     '/live/participants': {
       id: '/live/participants'
       path: '/participants'
@@ -467,6 +560,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LiveLogementsRouteImport
       parentRoute: typeof LiveRoute
     }
+    '/live/historique': {
+      id: '/live/historique'
+      path: '/historique'
+      fullPath: '/live/historique'
+      preLoaderRoute: typeof LiveHistoriqueRouteImport
+      parentRoute: typeof LiveRoute
+    }
+    '/live/goodies': {
+      id: '/live/goodies'
+      path: '/goodies'
+      fullPath: '/live/goodies'
+      preLoaderRoute: typeof LiveGoodiesRouteImport
+      parentRoute: typeof LiveRoute
+    }
     '/live/conso': {
       id: '/live/conso'
       path: '/conso'
@@ -481,6 +588,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LiveBusRouteImport
       parentRoute: typeof LiveRoute
     }
+    '/live/alertes': {
+      id: '/live/alertes'
+      path: '/alertes'
+      fullPath: '/live/alertes'
+      preLoaderRoute: typeof LiveAlertesRouteImport
+      parentRoute: typeof LiveRoute
+    }
     '/live/activites': {
       id: '/live/activites'
       path: '/activites'
@@ -493,12 +607,17 @@ declare module '@tanstack/react-router' {
 
 interface LiveRouteChildren {
   LiveActivitesRoute: typeof LiveActivitesRoute
+  LiveAlertesRoute: typeof LiveAlertesRoute
   LiveBusRoute: typeof LiveBusRoute
   LiveConsoRoute: typeof LiveConsoRoute
+  LiveGoodiesRoute: typeof LiveGoodiesRoute
+  LiveHistoriqueRoute: typeof LiveHistoriqueRoute
   LiveLogementsRoute: typeof LiveLogementsRoute
   LiveMedicalRoute: typeof LiveMedicalRoute
   LiveMessagesRoute: typeof LiveMessagesRoute
   LiveParticipantsRoute: typeof LiveParticipantsRoute
+  LivePlansRoute: typeof LivePlansRoute
+  LiveRestaurationRoute: typeof LiveRestaurationRoute
   LiveSecuriteRoute: typeof LiveSecuriteRoute
   LiveStaffRoute: typeof LiveStaffRoute
   LiveStatsRoute: typeof LiveStatsRoute
@@ -507,12 +626,17 @@ interface LiveRouteChildren {
 
 const LiveRouteChildren: LiveRouteChildren = {
   LiveActivitesRoute: LiveActivitesRoute,
+  LiveAlertesRoute: LiveAlertesRoute,
   LiveBusRoute: LiveBusRoute,
   LiveConsoRoute: LiveConsoRoute,
+  LiveGoodiesRoute: LiveGoodiesRoute,
+  LiveHistoriqueRoute: LiveHistoriqueRoute,
   LiveLogementsRoute: LiveLogementsRoute,
   LiveMedicalRoute: LiveMedicalRoute,
   LiveMessagesRoute: LiveMessagesRoute,
   LiveParticipantsRoute: LiveParticipantsRoute,
+  LivePlansRoute: LivePlansRoute,
+  LiveRestaurationRoute: LiveRestaurationRoute,
   LiveSecuriteRoute: LiveSecuriteRoute,
   LiveStaffRoute: LiveStaffRoute,
   LiveStatsRoute: LiveStatsRoute,
@@ -528,6 +652,7 @@ interface OrgRouteChildren {
   OrgImportRoute: typeof OrgImportRoute
   OrgModulesRoute: typeof OrgModulesRoute
   OrgParticipantsRoute: typeof OrgParticipantsRoute
+  OrgScanRoute: typeof OrgScanRoute
   OrgSettingsRoute: typeof OrgSettingsRoute
   OrgStaffRoute: typeof OrgStaffRoute
   OrgIndexRoute: typeof OrgIndexRoute
@@ -540,6 +665,7 @@ const OrgRouteChildren: OrgRouteChildren = {
   OrgImportRoute: OrgImportRoute,
   OrgModulesRoute: OrgModulesRoute,
   OrgParticipantsRoute: OrgParticipantsRoute,
+  OrgScanRoute: OrgScanRoute,
   OrgSettingsRoute: OrgSettingsRoute,
   OrgStaffRoute: OrgStaffRoute,
   OrgIndexRoute: OrgIndexRoute,
@@ -556,13 +682,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
