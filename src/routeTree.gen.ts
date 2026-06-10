@@ -9,38 +9,331 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as OrgRouteImport } from './routes/org'
+import { Route as LiveRouteImport } from './routes/live'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as OrgIndexRouteImport } from './routes/org.index'
+import { Route as LiveIndexRouteImport } from './routes/live.index'
+import { Route as WBraceletIdRouteImport } from './routes/w.$braceletId'
+import { Route as OrgStaffRouteImport } from './routes/org.staff'
+import { Route as OrgSettingsRouteImport } from './routes/org.settings'
+import { Route as OrgParticipantsRouteImport } from './routes/org.participants'
+import { Route as OrgModulesRouteImport } from './routes/org.modules'
+import { Route as OrgImportRouteImport } from './routes/org.import'
+import { Route as OrgDevisRouteImport } from './routes/org.devis'
+import { Route as OrgDesignRouteImport } from './routes/org.design'
+import { Route as OrgBraceletsRouteImport } from './routes/org.bracelets'
+import { Route as LiveStatsRouteImport } from './routes/live.stats'
+import { Route as LiveStaffRouteImport } from './routes/live.staff'
+import { Route as LiveSecuriteRouteImport } from './routes/live.securite'
+import { Route as LiveParticipantsRouteImport } from './routes/live.participants'
+import { Route as LiveMessagesRouteImport } from './routes/live.messages'
+import { Route as LiveMedicalRouteImport } from './routes/live.medical'
+import { Route as LiveLogementsRouteImport } from './routes/live.logements'
+import { Route as LiveConsoRouteImport } from './routes/live.conso'
+import { Route as LiveBusRouteImport } from './routes/live.bus'
+import { Route as LiveActivitesRouteImport } from './routes/live.activites'
 
+const OrgRoute = OrgRouteImport.update({
+  id: '/org',
+  path: '/org',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LiveRoute = LiveRouteImport.update({
+  id: '/live',
+  path: '/live',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OrgIndexRoute = OrgIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => OrgRoute,
+} as any)
+const LiveIndexRoute = LiveIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => LiveRoute,
+} as any)
+const WBraceletIdRoute = WBraceletIdRouteImport.update({
+  id: '/w/$braceletId',
+  path: '/w/$braceletId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OrgStaffRoute = OrgStaffRouteImport.update({
+  id: '/staff',
+  path: '/staff',
+  getParentRoute: () => OrgRoute,
+} as any)
+const OrgSettingsRoute = OrgSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => OrgRoute,
+} as any)
+const OrgParticipantsRoute = OrgParticipantsRouteImport.update({
+  id: '/participants',
+  path: '/participants',
+  getParentRoute: () => OrgRoute,
+} as any)
+const OrgModulesRoute = OrgModulesRouteImport.update({
+  id: '/modules',
+  path: '/modules',
+  getParentRoute: () => OrgRoute,
+} as any)
+const OrgImportRoute = OrgImportRouteImport.update({
+  id: '/import',
+  path: '/import',
+  getParentRoute: () => OrgRoute,
+} as any)
+const OrgDevisRoute = OrgDevisRouteImport.update({
+  id: '/devis',
+  path: '/devis',
+  getParentRoute: () => OrgRoute,
+} as any)
+const OrgDesignRoute = OrgDesignRouteImport.update({
+  id: '/design',
+  path: '/design',
+  getParentRoute: () => OrgRoute,
+} as any)
+const OrgBraceletsRoute = OrgBraceletsRouteImport.update({
+  id: '/bracelets',
+  path: '/bracelets',
+  getParentRoute: () => OrgRoute,
+} as any)
+const LiveStatsRoute = LiveStatsRouteImport.update({
+  id: '/stats',
+  path: '/stats',
+  getParentRoute: () => LiveRoute,
+} as any)
+const LiveStaffRoute = LiveStaffRouteImport.update({
+  id: '/staff',
+  path: '/staff',
+  getParentRoute: () => LiveRoute,
+} as any)
+const LiveSecuriteRoute = LiveSecuriteRouteImport.update({
+  id: '/securite',
+  path: '/securite',
+  getParentRoute: () => LiveRoute,
+} as any)
+const LiveParticipantsRoute = LiveParticipantsRouteImport.update({
+  id: '/participants',
+  path: '/participants',
+  getParentRoute: () => LiveRoute,
+} as any)
+const LiveMessagesRoute = LiveMessagesRouteImport.update({
+  id: '/messages',
+  path: '/messages',
+  getParentRoute: () => LiveRoute,
+} as any)
+const LiveMedicalRoute = LiveMedicalRouteImport.update({
+  id: '/medical',
+  path: '/medical',
+  getParentRoute: () => LiveRoute,
+} as any)
+const LiveLogementsRoute = LiveLogementsRouteImport.update({
+  id: '/logements',
+  path: '/logements',
+  getParentRoute: () => LiveRoute,
+} as any)
+const LiveConsoRoute = LiveConsoRouteImport.update({
+  id: '/conso',
+  path: '/conso',
+  getParentRoute: () => LiveRoute,
+} as any)
+const LiveBusRoute = LiveBusRouteImport.update({
+  id: '/bus',
+  path: '/bus',
+  getParentRoute: () => LiveRoute,
+} as any)
+const LiveActivitesRoute = LiveActivitesRouteImport.update({
+  id: '/activites',
+  path: '/activites',
+  getParentRoute: () => LiveRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/live': typeof LiveRouteWithChildren
+  '/org': typeof OrgRouteWithChildren
+  '/live/activites': typeof LiveActivitesRoute
+  '/live/bus': typeof LiveBusRoute
+  '/live/conso': typeof LiveConsoRoute
+  '/live/logements': typeof LiveLogementsRoute
+  '/live/medical': typeof LiveMedicalRoute
+  '/live/messages': typeof LiveMessagesRoute
+  '/live/participants': typeof LiveParticipantsRoute
+  '/live/securite': typeof LiveSecuriteRoute
+  '/live/staff': typeof LiveStaffRoute
+  '/live/stats': typeof LiveStatsRoute
+  '/org/bracelets': typeof OrgBraceletsRoute
+  '/org/design': typeof OrgDesignRoute
+  '/org/devis': typeof OrgDevisRoute
+  '/org/import': typeof OrgImportRoute
+  '/org/modules': typeof OrgModulesRoute
+  '/org/participants': typeof OrgParticipantsRoute
+  '/org/settings': typeof OrgSettingsRoute
+  '/org/staff': typeof OrgStaffRoute
+  '/w/$braceletId': typeof WBraceletIdRoute
+  '/live/': typeof LiveIndexRoute
+  '/org/': typeof OrgIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/live/activites': typeof LiveActivitesRoute
+  '/live/bus': typeof LiveBusRoute
+  '/live/conso': typeof LiveConsoRoute
+  '/live/logements': typeof LiveLogementsRoute
+  '/live/medical': typeof LiveMedicalRoute
+  '/live/messages': typeof LiveMessagesRoute
+  '/live/participants': typeof LiveParticipantsRoute
+  '/live/securite': typeof LiveSecuriteRoute
+  '/live/staff': typeof LiveStaffRoute
+  '/live/stats': typeof LiveStatsRoute
+  '/org/bracelets': typeof OrgBraceletsRoute
+  '/org/design': typeof OrgDesignRoute
+  '/org/devis': typeof OrgDevisRoute
+  '/org/import': typeof OrgImportRoute
+  '/org/modules': typeof OrgModulesRoute
+  '/org/participants': typeof OrgParticipantsRoute
+  '/org/settings': typeof OrgSettingsRoute
+  '/org/staff': typeof OrgStaffRoute
+  '/w/$braceletId': typeof WBraceletIdRoute
+  '/live': typeof LiveIndexRoute
+  '/org': typeof OrgIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/live': typeof LiveRouteWithChildren
+  '/org': typeof OrgRouteWithChildren
+  '/live/activites': typeof LiveActivitesRoute
+  '/live/bus': typeof LiveBusRoute
+  '/live/conso': typeof LiveConsoRoute
+  '/live/logements': typeof LiveLogementsRoute
+  '/live/medical': typeof LiveMedicalRoute
+  '/live/messages': typeof LiveMessagesRoute
+  '/live/participants': typeof LiveParticipantsRoute
+  '/live/securite': typeof LiveSecuriteRoute
+  '/live/staff': typeof LiveStaffRoute
+  '/live/stats': typeof LiveStatsRoute
+  '/org/bracelets': typeof OrgBraceletsRoute
+  '/org/design': typeof OrgDesignRoute
+  '/org/devis': typeof OrgDevisRoute
+  '/org/import': typeof OrgImportRoute
+  '/org/modules': typeof OrgModulesRoute
+  '/org/participants': typeof OrgParticipantsRoute
+  '/org/settings': typeof OrgSettingsRoute
+  '/org/staff': typeof OrgStaffRoute
+  '/w/$braceletId': typeof WBraceletIdRoute
+  '/live/': typeof LiveIndexRoute
+  '/org/': typeof OrgIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/live'
+    | '/org'
+    | '/live/activites'
+    | '/live/bus'
+    | '/live/conso'
+    | '/live/logements'
+    | '/live/medical'
+    | '/live/messages'
+    | '/live/participants'
+    | '/live/securite'
+    | '/live/staff'
+    | '/live/stats'
+    | '/org/bracelets'
+    | '/org/design'
+    | '/org/devis'
+    | '/org/import'
+    | '/org/modules'
+    | '/org/participants'
+    | '/org/settings'
+    | '/org/staff'
+    | '/w/$braceletId'
+    | '/live/'
+    | '/org/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/live/activites'
+    | '/live/bus'
+    | '/live/conso'
+    | '/live/logements'
+    | '/live/medical'
+    | '/live/messages'
+    | '/live/participants'
+    | '/live/securite'
+    | '/live/staff'
+    | '/live/stats'
+    | '/org/bracelets'
+    | '/org/design'
+    | '/org/devis'
+    | '/org/import'
+    | '/org/modules'
+    | '/org/participants'
+    | '/org/settings'
+    | '/org/staff'
+    | '/w/$braceletId'
+    | '/live'
+    | '/org'
+  id:
+    | '__root__'
+    | '/'
+    | '/live'
+    | '/org'
+    | '/live/activites'
+    | '/live/bus'
+    | '/live/conso'
+    | '/live/logements'
+    | '/live/medical'
+    | '/live/messages'
+    | '/live/participants'
+    | '/live/securite'
+    | '/live/staff'
+    | '/live/stats'
+    | '/org/bracelets'
+    | '/org/design'
+    | '/org/devis'
+    | '/org/import'
+    | '/org/modules'
+    | '/org/participants'
+    | '/org/settings'
+    | '/org/staff'
+    | '/w/$braceletId'
+    | '/live/'
+    | '/org/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  LiveRoute: typeof LiveRouteWithChildren
+  OrgRoute: typeof OrgRouteWithChildren
+  WBraceletIdRoute: typeof WBraceletIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/org': {
+      id: '/org'
+      path: '/org'
+      fullPath: '/org'
+      preLoaderRoute: typeof OrgRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/live': {
+      id: '/live'
+      path: '/live'
+      fullPath: '/live'
+      preLoaderRoute: typeof LiveRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +341,217 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/org/': {
+      id: '/org/'
+      path: '/'
+      fullPath: '/org/'
+      preLoaderRoute: typeof OrgIndexRouteImport
+      parentRoute: typeof OrgRoute
+    }
+    '/live/': {
+      id: '/live/'
+      path: '/'
+      fullPath: '/live/'
+      preLoaderRoute: typeof LiveIndexRouteImport
+      parentRoute: typeof LiveRoute
+    }
+    '/w/$braceletId': {
+      id: '/w/$braceletId'
+      path: '/w/$braceletId'
+      fullPath: '/w/$braceletId'
+      preLoaderRoute: typeof WBraceletIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/org/staff': {
+      id: '/org/staff'
+      path: '/staff'
+      fullPath: '/org/staff'
+      preLoaderRoute: typeof OrgStaffRouteImport
+      parentRoute: typeof OrgRoute
+    }
+    '/org/settings': {
+      id: '/org/settings'
+      path: '/settings'
+      fullPath: '/org/settings'
+      preLoaderRoute: typeof OrgSettingsRouteImport
+      parentRoute: typeof OrgRoute
+    }
+    '/org/participants': {
+      id: '/org/participants'
+      path: '/participants'
+      fullPath: '/org/participants'
+      preLoaderRoute: typeof OrgParticipantsRouteImport
+      parentRoute: typeof OrgRoute
+    }
+    '/org/modules': {
+      id: '/org/modules'
+      path: '/modules'
+      fullPath: '/org/modules'
+      preLoaderRoute: typeof OrgModulesRouteImport
+      parentRoute: typeof OrgRoute
+    }
+    '/org/import': {
+      id: '/org/import'
+      path: '/import'
+      fullPath: '/org/import'
+      preLoaderRoute: typeof OrgImportRouteImport
+      parentRoute: typeof OrgRoute
+    }
+    '/org/devis': {
+      id: '/org/devis'
+      path: '/devis'
+      fullPath: '/org/devis'
+      preLoaderRoute: typeof OrgDevisRouteImport
+      parentRoute: typeof OrgRoute
+    }
+    '/org/design': {
+      id: '/org/design'
+      path: '/design'
+      fullPath: '/org/design'
+      preLoaderRoute: typeof OrgDesignRouteImport
+      parentRoute: typeof OrgRoute
+    }
+    '/org/bracelets': {
+      id: '/org/bracelets'
+      path: '/bracelets'
+      fullPath: '/org/bracelets'
+      preLoaderRoute: typeof OrgBraceletsRouteImport
+      parentRoute: typeof OrgRoute
+    }
+    '/live/stats': {
+      id: '/live/stats'
+      path: '/stats'
+      fullPath: '/live/stats'
+      preLoaderRoute: typeof LiveStatsRouteImport
+      parentRoute: typeof LiveRoute
+    }
+    '/live/staff': {
+      id: '/live/staff'
+      path: '/staff'
+      fullPath: '/live/staff'
+      preLoaderRoute: typeof LiveStaffRouteImport
+      parentRoute: typeof LiveRoute
+    }
+    '/live/securite': {
+      id: '/live/securite'
+      path: '/securite'
+      fullPath: '/live/securite'
+      preLoaderRoute: typeof LiveSecuriteRouteImport
+      parentRoute: typeof LiveRoute
+    }
+    '/live/participants': {
+      id: '/live/participants'
+      path: '/participants'
+      fullPath: '/live/participants'
+      preLoaderRoute: typeof LiveParticipantsRouteImport
+      parentRoute: typeof LiveRoute
+    }
+    '/live/messages': {
+      id: '/live/messages'
+      path: '/messages'
+      fullPath: '/live/messages'
+      preLoaderRoute: typeof LiveMessagesRouteImport
+      parentRoute: typeof LiveRoute
+    }
+    '/live/medical': {
+      id: '/live/medical'
+      path: '/medical'
+      fullPath: '/live/medical'
+      preLoaderRoute: typeof LiveMedicalRouteImport
+      parentRoute: typeof LiveRoute
+    }
+    '/live/logements': {
+      id: '/live/logements'
+      path: '/logements'
+      fullPath: '/live/logements'
+      preLoaderRoute: typeof LiveLogementsRouteImport
+      parentRoute: typeof LiveRoute
+    }
+    '/live/conso': {
+      id: '/live/conso'
+      path: '/conso'
+      fullPath: '/live/conso'
+      preLoaderRoute: typeof LiveConsoRouteImport
+      parentRoute: typeof LiveRoute
+    }
+    '/live/bus': {
+      id: '/live/bus'
+      path: '/bus'
+      fullPath: '/live/bus'
+      preLoaderRoute: typeof LiveBusRouteImport
+      parentRoute: typeof LiveRoute
+    }
+    '/live/activites': {
+      id: '/live/activites'
+      path: '/activites'
+      fullPath: '/live/activites'
+      preLoaderRoute: typeof LiveActivitesRouteImport
+      parentRoute: typeof LiveRoute
+    }
   }
 }
 
+interface LiveRouteChildren {
+  LiveActivitesRoute: typeof LiveActivitesRoute
+  LiveBusRoute: typeof LiveBusRoute
+  LiveConsoRoute: typeof LiveConsoRoute
+  LiveLogementsRoute: typeof LiveLogementsRoute
+  LiveMedicalRoute: typeof LiveMedicalRoute
+  LiveMessagesRoute: typeof LiveMessagesRoute
+  LiveParticipantsRoute: typeof LiveParticipantsRoute
+  LiveSecuriteRoute: typeof LiveSecuriteRoute
+  LiveStaffRoute: typeof LiveStaffRoute
+  LiveStatsRoute: typeof LiveStatsRoute
+  LiveIndexRoute: typeof LiveIndexRoute
+}
+
+const LiveRouteChildren: LiveRouteChildren = {
+  LiveActivitesRoute: LiveActivitesRoute,
+  LiveBusRoute: LiveBusRoute,
+  LiveConsoRoute: LiveConsoRoute,
+  LiveLogementsRoute: LiveLogementsRoute,
+  LiveMedicalRoute: LiveMedicalRoute,
+  LiveMessagesRoute: LiveMessagesRoute,
+  LiveParticipantsRoute: LiveParticipantsRoute,
+  LiveSecuriteRoute: LiveSecuriteRoute,
+  LiveStaffRoute: LiveStaffRoute,
+  LiveStatsRoute: LiveStatsRoute,
+  LiveIndexRoute: LiveIndexRoute,
+}
+
+const LiveRouteWithChildren = LiveRoute._addFileChildren(LiveRouteChildren)
+
+interface OrgRouteChildren {
+  OrgBraceletsRoute: typeof OrgBraceletsRoute
+  OrgDesignRoute: typeof OrgDesignRoute
+  OrgDevisRoute: typeof OrgDevisRoute
+  OrgImportRoute: typeof OrgImportRoute
+  OrgModulesRoute: typeof OrgModulesRoute
+  OrgParticipantsRoute: typeof OrgParticipantsRoute
+  OrgSettingsRoute: typeof OrgSettingsRoute
+  OrgStaffRoute: typeof OrgStaffRoute
+  OrgIndexRoute: typeof OrgIndexRoute
+}
+
+const OrgRouteChildren: OrgRouteChildren = {
+  OrgBraceletsRoute: OrgBraceletsRoute,
+  OrgDesignRoute: OrgDesignRoute,
+  OrgDevisRoute: OrgDevisRoute,
+  OrgImportRoute: OrgImportRoute,
+  OrgModulesRoute: OrgModulesRoute,
+  OrgParticipantsRoute: OrgParticipantsRoute,
+  OrgSettingsRoute: OrgSettingsRoute,
+  OrgStaffRoute: OrgStaffRoute,
+  OrgIndexRoute: OrgIndexRoute,
+}
+
+const OrgRouteWithChildren = OrgRoute._addFileChildren(OrgRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  LiveRoute: LiveRouteWithChildren,
+  OrgRoute: OrgRouteWithChildren,
+  WBraceletIdRoute: WBraceletIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
