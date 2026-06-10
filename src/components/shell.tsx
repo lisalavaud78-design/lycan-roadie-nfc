@@ -7,9 +7,10 @@ export function OrgShell({ children }: { children: ReactNode }) {
   const tabs = [
     { to: "/org", label: "Assistant IA", exact: true },
     { to: "/org/devis", label: "Devis" },
-    { to: "/org/bracelets", label: "Bracelets" },
-    { to: "/org/design", label: "Design" },
     { to: "/org/modules", label: "Modules NFC" },
+    { to: "/org/bracelets", label: "Bracelets" },
+    { to: "/org/scan", label: "Scan NFC demo" },
+    { to: "/org/design", label: "Design" },
     { to: "/org/participants", label: "Participants" },
     { to: "/org/staff", label: "Staff" },
     { to: "/org/import", label: "Import CSV" },
