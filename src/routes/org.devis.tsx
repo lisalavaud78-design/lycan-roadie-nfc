@@ -92,7 +92,7 @@ function Devis() {
 
       <div className="grid gap-4 md:grid-cols-4">
         <Kpi label="Options fixes" value={`${q.optionsFixes.toFixed(0)} €`} sub={`${q.activeModules.length} activées`} />
-        <Kpi label="Matière (×${q.totalBracelets})" value={`${q.matiere.toFixed(0)} €`} sub={`${q.totalBracelets} bracelets`} />
+        <Kpi label={`Matière (×${q.totalBracelets})`} value={`${q.matiere.toFixed(0)} €`} sub={`${q.totalBracelets} bracelets`} />
         <Kpi label="Total TTC" value={`${q.totalTTC.toFixed(0)} €`} highlight />
         <Kpi label="Marge estimée" value={`${q.marge.toFixed(0)} €`} />
       </div>
