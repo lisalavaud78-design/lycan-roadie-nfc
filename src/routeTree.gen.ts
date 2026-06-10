@@ -17,6 +17,7 @@ import { Route as LiveIndexRouteImport } from './routes/live.index'
 import { Route as WBraceletIdRouteImport } from './routes/w.$braceletId'
 import { Route as OrgStaffRouteImport } from './routes/org.staff'
 import { Route as OrgSettingsRouteImport } from './routes/org.settings'
+import { Route as OrgScanRouteImport } from './routes/org.scan'
 import { Route as OrgParticipantsRouteImport } from './routes/org.participants'
 import { Route as OrgModulesRouteImport } from './routes/org.modules'
 import { Route as OrgImportRouteImport } from './routes/org.import'
@@ -77,6 +78,11 @@ const OrgStaffRoute = OrgStaffRouteImport.update({
 const OrgSettingsRoute = OrgSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
+  getParentRoute: () => OrgRoute,
+} as any)
+const OrgScanRoute = OrgScanRouteImport.update({
+  id: '/scan',
+  path: '/scan',
   getParentRoute: () => OrgRoute,
 } as any)
 const OrgParticipantsRoute = OrgParticipantsRouteImport.update({
@@ -210,6 +216,7 @@ export interface FileRoutesByFullPath {
   '/org/import': typeof OrgImportRoute
   '/org/modules': typeof OrgModulesRoute
   '/org/participants': typeof OrgParticipantsRoute
+  '/org/scan': typeof OrgScanRoute
   '/org/settings': typeof OrgSettingsRoute
   '/org/staff': typeof OrgStaffRoute
   '/w/$braceletId': typeof WBraceletIdRoute
@@ -239,6 +246,7 @@ export interface FileRoutesByTo {
   '/org/import': typeof OrgImportRoute
   '/org/modules': typeof OrgModulesRoute
   '/org/participants': typeof OrgParticipantsRoute
+  '/org/scan': typeof OrgScanRoute
   '/org/settings': typeof OrgSettingsRoute
   '/org/staff': typeof OrgStaffRoute
   '/w/$braceletId': typeof WBraceletIdRoute
@@ -271,6 +279,7 @@ export interface FileRoutesById {
   '/org/import': typeof OrgImportRoute
   '/org/modules': typeof OrgModulesRoute
   '/org/participants': typeof OrgParticipantsRoute
+  '/org/scan': typeof OrgScanRoute
   '/org/settings': typeof OrgSettingsRoute
   '/org/staff': typeof OrgStaffRoute
   '/w/$braceletId': typeof WBraceletIdRoute
@@ -304,6 +313,7 @@ export interface FileRouteTypes {
     | '/org/import'
     | '/org/modules'
     | '/org/participants'
+    | '/org/scan'
     | '/org/settings'
     | '/org/staff'
     | '/w/$braceletId'
@@ -333,6 +343,7 @@ export interface FileRouteTypes {
     | '/org/import'
     | '/org/modules'
     | '/org/participants'
+    | '/org/scan'
     | '/org/settings'
     | '/org/staff'
     | '/w/$braceletId'
@@ -364,6 +375,7 @@ export interface FileRouteTypes {
     | '/org/import'
     | '/org/modules'
     | '/org/participants'
+    | '/org/scan'
     | '/org/settings'
     | '/org/staff'
     | '/w/$braceletId'
@@ -434,6 +446,13 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/org/settings'
       preLoaderRoute: typeof OrgSettingsRouteImport
+      parentRoute: typeof OrgRoute
+    }
+    '/org/scan': {
+      id: '/org/scan'
+      path: '/scan'
+      fullPath: '/org/scan'
+      preLoaderRoute: typeof OrgScanRouteImport
       parentRoute: typeof OrgRoute
     }
     '/org/participants': {
@@ -633,6 +652,7 @@ interface OrgRouteChildren {
   OrgImportRoute: typeof OrgImportRoute
   OrgModulesRoute: typeof OrgModulesRoute
   OrgParticipantsRoute: typeof OrgParticipantsRoute
+  OrgScanRoute: typeof OrgScanRoute
   OrgSettingsRoute: typeof OrgSettingsRoute
   OrgStaffRoute: typeof OrgStaffRoute
   OrgIndexRoute: typeof OrgIndexRoute
@@ -645,6 +665,7 @@ const OrgRouteChildren: OrgRouteChildren = {
   OrgImportRoute: OrgImportRoute,
   OrgModulesRoute: OrgModulesRoute,
   OrgParticipantsRoute: OrgParticipantsRoute,
+  OrgScanRoute: OrgScanRoute,
   OrgSettingsRoute: OrgSettingsRoute,
   OrgStaffRoute: OrgStaffRoute,
   OrgIndexRoute: OrgIndexRoute,
