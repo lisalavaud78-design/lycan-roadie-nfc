@@ -17,6 +17,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "LYCAN WEI NFC — Highway to WEI 2025" },
       { name: "description", content: "Application NFC officielle du WEI Lycan 2025 — Télécom SudParis & IMT-BS" },
+      { property: "og:title", content: "LYCAN WEI NFC — Highway to WEI 2025" },
+      { name: "twitter:title", content: "LYCAN WEI NFC — Highway to WEI 2025" },
+      { property: "og:description", content: "Application NFC officielle du WEI Lycan 2025 — Télécom SudParis & IMT-BS" },
+      { name: "twitter:description", content: "Application NFC officielle du WEI Lycan 2025 — Télécom SudParis & IMT-BS" },
+      { name: "twitter:card", content: "summary" },
+      { property: "og:type", content: "website" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
