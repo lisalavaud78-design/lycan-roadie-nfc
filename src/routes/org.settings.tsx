@@ -13,11 +13,11 @@ function Settings() {
     <div className="space-y-6">
       <h1 className="display text-3xl">Paramètres</h1>
       <div className="glass rounded-2xl p-6 space-y-4">
-        <Field label="Participants" type="number" value={config.nbParticipants} onChange={(v) => actions.setConfig({ nbParticipants: +v })} />
-        <Field label="Staff" type="number" value={config.nbStaff} onChange={(v) => actions.setConfig({ nbStaff: +v })} />
-        <Field label="Bus" type="number" value={config.nbBus} onChange={(v) => actions.setConfig({ nbBus: +v })} />
-        <Field label="Tickets conso / pers" type="number" value={config.ticketsConsoParPart} onChange={(v) => actions.setConfig({ ticketsConsoParPart: +v })} />
-        <Field label="Unité fort / pers" type="number" value={config.uniteFortParPart} onChange={(v) => actions.setConfig({ uniteFortParPart: +v })} />
+        <Field label="Participants" type="number" value={config.nbParticipants} onChange={(v: string) => actions.setConfig({ nbParticipants: +v })} />
+        <Field label="Staff" type="number" value={config.nbStaff} onChange={(v: string) => actions.setConfig({ nbStaff: +v })} />
+        <Field label="Bus" type="number" value={config.nbBus} onChange={(v: string) => actions.setConfig({ nbBus: +v })} />
+        <Field label="Tickets conso / pers" type="number" value={config.ticketsConsoParPart} onChange={(v: string) => actions.setConfig({ ticketsConsoParPart: +v })} />
+        <Field label="Unité fort / pers" type="number" value={config.uniteFortParPart} onChange={(v: string) => actions.setConfig({ uniteFortParPart: +v })} />
       </div>
       <button onClick={() => { actions.resetAll(); toast.success("Données réinitialisées"); }}
         className="flex items-center gap-2 rounded-lg border border-destructive/40 bg-destructive/10 px-4 py-2 text-sm text-destructive hover:bg-destructive/20">
