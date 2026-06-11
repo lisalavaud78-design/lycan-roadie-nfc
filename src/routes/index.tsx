@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useWei } from "@/lib/wei-store";
-import { Zap, Radio, Activity, ArrowRight, Music2 } from "lucide-react";
+import { Zap, Radio, Activity, ArrowRight, Music2, Shield, Wand2 } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -14,11 +14,11 @@ export const Route = createFileRoute("/")({
 
 function Home() {
   const bracelets = useWei((s) => s.bracelets);
-  const sample = bracelets[0];
+  const sampleParticipant = bracelets.find((b) => b.role === "participant");
+  const sampleStaff = bracelets.find((b) => b.role !== "participant");
 
   return (
     <div className="min-h-screen">
-      {/* Hero */}
       <section className="relative overflow-hidden px-6 pb-20 pt-16 md:pt-24">
         <div className="absolute inset-0 -z-10">
           <div className="absolute left-1/2 top-1/4 h-96 w-96 -translate-x-1/2 rounded-full bg-electric/20 blur-[120px]" />
@@ -38,30 +38,41 @@ function Home() {
             <span className="text-foreground"> 350 participants · 6 bus · 4 jours rock'n roll.</span>
           </p>
 
-          <div className="mt-10 grid gap-4 md:grid-cols-3">
-            <SpaceCard
-              to="/org"
-              icon={<Zap className="h-6 w-6" />}
-              eyebrow="Avant l'événement"
-              title="Espace Organisateur"
-              desc="Assistant IA, devis automatique, génération de bracelets, modules NFC."
-            />
-            <SpaceCard
-              to="/w/$braceletId"
-              params={{ braceletId: sample?.id ?? "demo" }}
-              icon={<Radio className="h-6 w-6" />}
-              eyebrow="Pendant le WEI"
-              title="Interface Bracelet NFC"
-              desc="Vue participant : billet, transport, planning, tickets conso, SOS."
-              highlight
-            />
-            <SpaceCard
-              to="/live"
-              icon={<Activity className="h-6 w-6" />}
-              eyebrow="Live"
-              title="Dashboard Organisateur"
-              desc="Suivi temps réel : bus, soirées, sécurité, médical, staff."
-            />
+          <div className="mt-12">
+            <div className="mb-4 text-xs uppercase tracking-widest text-electric">Choisis ton espace</div>
+            <div className="grid gap-4 md:grid-cols-2">
+              <SpaceCard
+                to="/org"
+                icon={<Wand2 className="h-6 w-6" />}
+                eyebrow="Organisateur · Avant"
+                title="Préparer le WEI"
+                desc="Assistant IA guidé, devis automatique, modules NFC, génération bracelets, design, import CSV."
+              />
+              <SpaceCard
+                to="/live"
+                icon={<Activity className="h-6 w-6" />}
+                eyebrow="Organisateur · Pendant"
+                title="Piloter le WEI en direct"
+                desc="Dashboard live : bus, logements, soirées, médical, sécurité, staff, alertes, messages."
+              />
+              <SpaceCard
+                to="/w/$braceletId"
+                params={{ braceletId: sampleParticipant?.id ?? "demo" }}
+                icon={<Radio className="h-6 w-6" />}
+                eyebrow="Bracelet NFC"
+                title="Interface participant"
+                desc="Accueil, planning, transport, logement, tickets conso, SOS, médical, contacts."
+                highlight
+              />
+              <SpaceCard
+                to="/s/$braceletId"
+                params={{ braceletId: sampleStaff?.id ?? "demo" }}
+                icon={<Shield className="h-6 w-6" />}
+                eyebrow="Bracelet NFC"
+                title="Interface staff"
+                desc="Planning perso, missions, notifications, carte staff, signalements."
+              />
+            </div>
           </div>
 
           <div className="mt-12 grid grid-cols-2 gap-4 md:grid-cols-4">

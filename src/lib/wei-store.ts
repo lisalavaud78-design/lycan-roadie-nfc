@@ -4,6 +4,27 @@ import { useSyncExternalStore } from "react";
 export type Role = "participant" | "staff_bde" | "staff_bda" | "staff_asint" | "securite" | "paps" | "funbreak" | "vip" | "prestataire" | "bar";
 export type School = "TSP" | "IMT-BS";
 
+export interface StaffShift {
+  id: string;
+  date: string; // "Samedi 6 sept"
+  debut: string; // "15:00"
+  fin: string;
+  mission: string;
+  lieu: string;
+  responsable: string;
+  consignes: string;
+  statut: "a_venir" | "en_cours" | "termine";
+}
+
+export interface Notif {
+  id: string;
+  ts: string;
+  titre: string;
+  text: string;
+  lu: boolean;
+  priorite: "info" | "urgent";
+}
+
 export interface Bracelet {
   id: string;
   url: string;
@@ -12,19 +33,31 @@ export interface Bracelet {
   role: Role;
   ecole: School;
   bus: number | null;
+  busAller: number | null;
+  busAllerType: string | null;
+  busRetour: number | null;
+  busRetourType: string | null;
   bungalow: string | null;
+  numLogement: string | null;
+  colocataires: string[];
   equipe: string | null;
-  tickets_conso: { id: string; used: boolean; usedAt?: string; lieu?: string }[];
+  zone: string | null;
+  tickets_conso: { id: string; used: boolean; usedAt?: string; lieu?: string; soiree?: number }[];
   unite_fort: { used: boolean; usedAt?: string; lieu?: string };
   acces: string[];
   statut: "actif" | "inactif" | "perdu";
-  checkin: { general: boolean; bus: boolean; logement: boolean };
+  checkin: { general: boolean; bus: boolean; busRetour: boolean; logement: boolean };
   goodies: Record<string, { recupere: boolean; taille?: string }>;
   medical: { allergies: string; traitements: string; pathologies: string; contactUrgence: string; consentement: boolean };
   activites: Record<string, "inscrit" | "absent" | "rappel" | null>;
   repas: Record<string, boolean>;
   history: { ts: string; type: string; detail: string }[];
+  staffShifts: StaffShift[];
+  notifications: Notif[];
 }
+
+export const BUS_TYPES = ["Welcome", "BDE / vieux", "M", "T", "A", "SP Pro", "ASINT"] as const;
+export const DESTINATION_CONFIDENTIELLE = "Destination confidentielle révélée à l'arrivée";
 
 export interface Alert {
   id: string;
@@ -39,12 +72,16 @@ export interface Alert {
   notes: string;
 }
 
+export type StaffGroup = "tous" | "securite" | "medical" | "bus" | "bar" | "activite" | "logement" | "bde" | "bda" | "asint" | "paps" | "goodies" | "restauration";
+
 export interface StaffMessage {
   id: string;
   ts: string;
   from: string;
-  to: "tous" | "securite" | "medical" | "bus" | "bar" | "activite";
+  to: StaffGroup;
   text: string;
+  urgent?: boolean;
+  lus?: number;
 }
 
 export interface ScanLog {
@@ -121,7 +158,7 @@ export interface WeiState {
   chat: ChatMessage[];
 }
 
-const STORAGE_KEY = "lycan-wei-state-v3";
+const STORAGE_KEY = "lycan-wei-state-v5";
 
 const PRENOMS = ["Lucas", "Emma", "Hugo", "Léa", "Nathan", "Chloé", "Tom", "Sarah", "Jules", "Manon", "Théo", "Camille", "Antoine", "Inès", "Maxime", "Clara", "Paul", "Louise", "Arthur", "Alice", "Ethan", "Romane", "Adam", "Jade", "Raphaël", "Mila", "Léo", "Anaïs", "Gabriel", "Eva"];
 const NOMS = ["Martin", "Bernard", "Dubois", "Thomas", "Robert", "Petit", "Richard", "Durand", "Leroy", "Moreau", "Simon", "Laurent", "Lefebvre", "Michel", "Garcia", "David", "Bertrand", "Roux", "Vincent", "Fournier"];
@@ -131,32 +168,66 @@ function randId(prefix = "NFC") {
   return `${prefix}-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
 }
 
+function makeStaffShifts(role: Role): StaffShift[] {
+  const base: Omit<StaffShift, "id" | "statut">[] = role === "paps" ? [
+    { date: "Samedi 6 sept", debut: "14:00", fin: "20:00", mission: "Poste PAPS principal", lieu: "Tente médicale centrale", responsable: "Franck Picaut", consignes: "Surveillance olympiades + apéro mousse" },
+    { date: "Samedi 6 sept", debut: "22:00", fin: "04:00", mission: "Poste PAPS soirée", lieu: "Soirée principale", responsable: "Franck Picaut", consignes: "Veille alcoolisation, malaises" },
+  ] : role === "securite" ? [
+    { date: "Vendredi 5 sept", debut: "18:00", fin: "23:00", mission: "Sécurité arrivée", lieu: "Entrée camping", responsable: "Inès Tagliaferri", consignes: "Contrôle bracelets + accueil" },
+    { date: "Samedi 6 sept", debut: "22:00", fin: "04:00", mission: "Sécurité soirée", lieu: "Soirée techno", responsable: "Inès Tagliaferri", consignes: "Rondes, anti-intrusion, écoute radio" },
+  ] : role === "bar" ? [
+    { date: "Samedi 6 sept", debut: "22:00", fin: "04:00", mission: "Tenue bar central", lieu: "Bar central", responsable: "BDE", consignes: "Scan tickets conso, gestion unité fort" },
+  ] : [
+    { date: "Vendredi 5 sept", debut: "07:00", fin: "19:00", mission: "Encadrement bus", lieu: "Parking TSP → Ty Nadan", responsable: "Ismaël Lepage", consignes: "Appel, sécurité bus, pauses" },
+    { date: "Samedi 6 sept", debut: "11:00", fin: "13:00", mission: "Brunch", lieu: "Salle restauration", responsable: "Lucas Broussely", consignes: "Service + check allergies" },
+    { date: "Samedi 6 sept", debut: "15:00", fin: "16:30", mission: "Olympiades", lieu: "Terrain central", responsable: "BDA", consignes: "Animation jeux par équipe" },
+  ];
+  return base.map((s, i) => ({ ...s, id: `SH-${i}`, statut: i === 0 ? "termine" : i === 1 ? "en_cours" : "a_venir" }));
+}
+
 export function makeBracelet(role: Role, idx: number): Bracelet {
   const id = randId(role === "participant" ? "NFC" : "STF");
   const prenom = rand(PRENOMS);
   const nom = rand(NOMS);
   const ecole: School = Math.random() < 0.6 ? "TSP" : "IMT-BS";
   const isPart = role === "participant";
+  const busAller = isPart ? (idx % 6) + 1 : null;
+  const busRetour = isPart ? ((idx + 2) % 6) + 1 : null;
+  const bungalow = isPart ? `B${String(Math.floor(idx / 5) + 1).padStart(2, "0")}` : null;
+  // colocataires mock — generate 3-4 fake first names
+  const coloc = isPart ? Array.from({ length: 3 + (idx % 2) }, () => `${rand(PRENOMS)} ${rand(NOMS)[0]}.`) : [];
   return {
     id,
-    url: `https://lycan-wei-nfc.app/w/${id}`,
+    url: `https://lycan-wei-nfc.app/${isPart ? "w" : "s"}/${id}`,
     prenom,
     nom,
     role,
     ecole,
-    bus: isPart ? (idx % 6) + 1 : null,
-    bungalow: isPart ? `B${String(Math.floor(idx / 5) + 1).padStart(2, "0")}` : null,
+    bus: busAller,
+    busAller,
+    busAllerType: busAller != null ? BUS_TYPES[(idx % BUS_TYPES.length)] : null,
+    busRetour,
+    busRetourType: busRetour != null ? BUS_TYPES[((idx + 3) % BUS_TYPES.length)] : null,
+    bungalow,
+    numLogement: bungalow,
+    colocataires: coloc,
     equipe: isPart ? `Équipe ${["Volt", "Storm", "Riff", "Nova", "Howl", "Steel"][idx % 6]}` : null,
-    tickets_conso: isPart ? [1, 2, 3].map((n) => ({ id: `T${n}`, used: false })) : [],
+    zone: isPart ? null : ["Bar central", "Soirée techno", "Bungalows B", "Entrée camping", "PAPS", "Funbreak"][idx % 6],
+    tickets_conso: isPart ? [1, 2, 3].map((n) => ({ id: `T${n}`, used: false, soiree: n <= 2 ? 1 : 2 })) : [],
     unite_fort: { used: false },
     acces: isPart ? ["soiree", "activites", "repas"] : ["soiree", "activites", "repas", "backstage", "staff"],
     statut: "actif",
-    checkin: { general: false, bus: false, logement: false },
+    checkin: { general: false, bus: false, busRetour: false, logement: false },
     goodies: { tshirt: { recupere: false, taille: "M" }, bob: { recupere: false }, bandana: { recupere: false }, ecocup: { recupere: false }, sac: { recupere: false } },
     medical: { allergies: "", traitements: "", pathologies: "", contactUrgence: "", consentement: false },
     activites: {},
     repas: {},
     history: [{ ts: new Date().toISOString(), type: "creation", detail: "Bracelet généré" }],
+    staffShifts: isPart ? [] : makeStaffShifts(role),
+    notifications: isPart ? [] : [
+      { id: "N1", ts: new Date(Date.now() - 30 * 60_000).toISOString(), titre: "Briefing 21h", text: "Brief général staff salle principale.", lu: false, priorite: "info" },
+      { id: "N2", ts: new Date(Date.now() - 10 * 60_000).toISOString(), titre: "Renfort demandé", text: "Renfort sécurité scène techno.", lu: false, priorite: "urgent" },
+    ],
   };
 }
 
