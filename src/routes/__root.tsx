@@ -9,6 +9,7 @@ import {
 import type { ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { Toaster } from "@/components/ui/sonner";
+import { WeiHydrator } from "@/lib/wei-store";
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   head: () => ({
@@ -68,6 +69,7 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   return (
     <QueryClientProvider client={queryClient}>
+      <WeiHydrator />
       <Outlet />
       <Toaster theme="dark" position="top-right" />
     </QueryClientProvider>

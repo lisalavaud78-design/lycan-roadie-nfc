@@ -19,6 +19,7 @@ function Alertes() {
   const filtered = filter === "all" ? alerts : alerts.filter((a) => a.statut === filter);
 
   function createDemo() {
+    if (!bracelets.length) return;
     const b = bracelets[Math.floor(Math.random() * bracelets.length)];
     const t = TYPES[Math.floor(Math.random() * TYPES.length)];
     actions.addAlert({ type: t, braceletId: b.id, prenom: b.prenom, lieu: "Camping zone", priorite: "moyenne", notes: `Alerte ${t} simulée` });

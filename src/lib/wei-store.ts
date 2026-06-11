@@ -1,5 +1,5 @@
 // Local persistent store for LYCAN WEI NFC (no backend, localStorage based)
-import { useSyncExternalStore } from "react";
+import { useSyncExternalStore, useEffect } from "react";
 
 export type Role = "participant" | "staff_bde" | "staff_bda" | "staff_asint" | "securite" | "paps" | "funbreak" | "vip" | "prestataire" | "bar";
 export type School = "TSP" | "IMT-BS";
@@ -246,16 +246,49 @@ function seed(): WeiState {
   };
 }
 
-let state: WeiState = (() => {
-  if (typeof window === "undefined") return seed();
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) return JSON.parse(raw);
-  } catch {}
-  const s = seed();
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(s)); } catch {}
-  return s;
-})();
+// Stable SSR-safe initial state — identical on server and client so React hydration never mismatches
+const INITIAL_STATE: WeiState = {
+  config: { nbParticipants: 350, nbStaff: 40, nbBus: 6, ticketsConsoParPart: 3, uniteFortParPart: 1, designColor: "electric" },
+  modules: {
+    billet: true, identite: true, medical: true, urgence: true, partenaires: false, parking: true,
+    plan: true, logistique: true, adn: false, parental: false, reseaux: false, reservations: true,
+    transport: true, cashless: true, coordonnees_pro: false, carte_visite: false, carte_vitale: false,
+    directives_medicales: false, contact_senior: false, tuteur: false, plan_soin: false,
+    carte_etudiante: false, planning: true, acces_batiment: false, cv: false, linkedin: false,
+    photos: true, reservation_salle: false, certif_medical: false, carte_grise: false,
+    assurance: false, carnet_entretien: false, passeport_num: false, portfolio: false, site_web: false,
+  },
+  bracelets: [],
+  alerts: [],
+  messages: [],
+  scans: [],
+  chat: [{
+    id: "msg-0", ts: "2025-09-05T00:00:00.000Z", role: "assistant",
+    text: "Salut ! Je suis l'assistant IA du WEI Lycan. Dis-moi ce que tu veux configurer : nombre de participants, bus, tickets conso, modules NFC, génération de bracelets, devis…",
+  }],
+};
+
+let state: WeiState = INITIAL_STATE;
+
+// WeiHydrator: renders null, but its useEffect is guaranteed to run after React commits to the DOM.
+// This is the correct pattern for loading localStorage in an SSR app — useEffect never runs on the server.
+export function WeiHydrator() {
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        state = JSON.parse(raw);
+      } else {
+        state = seed();
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch {}
+      }
+    } catch {
+      state = seed();
+    }
+    emit();
+  }, []);
+  return null;
+}
 
 const listeners = new Set<() => void>();
 function emit() {
@@ -273,7 +306,16 @@ export const weiStore = {
 };
 
 export function useWei<T>(selector: (s: WeiState) => T): T {
-  return useSyncExternalStore(weiStore.subscribe, () => selector(state), () => selector(state));
+  // Subscribe to the whole state object (a stable reference that only changes on emit).
+  // Applying the selector OUTSIDE useSyncExternalStore avoids the "getSnapshot should be
+  // cached" infinite loop that occurs when a selector returns a fresh array (.filter/.slice/.map)
+  // on every render.
+  const snapshot = useSyncExternalStore(
+    weiStore.subscribe,
+    () => state,
+    () => INITIAL_STATE,
+  );
+  return selector(snapshot);
 }
 
 function logScan(s: WeiState, scan: Omit<ScanLog, "id" | "ts">): ScanLog[] {

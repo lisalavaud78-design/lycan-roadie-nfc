@@ -1,8 +1,21 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useWei, actions } from "@/lib/wei-store";
+import { useWei, actions, type Role } from "@/lib/wei-store";
 import { useState } from "react";
 import { Radio, Scan, CheckCircle2, XCircle } from "lucide-react";
 import { toast } from "sonner";
+
+const ROLE_LABELS: Record<Role, string> = {
+  participant: "Participant WEI",
+  staff_bde: "Staff BDE",
+  staff_bda: "Staff BDA",
+  staff_asint: "Staff ASINT",
+  securite: "Sécurité",
+  paps: "Secouriste / PAPS",
+  funbreak: "Funbreak",
+  vip: "VIP / invité",
+  prestataire: "Prestataire",
+  bar: "Bar",
+};
 
 export const Route = createFileRoute("/org/scan")({
   component: ScanDemo,
@@ -17,6 +30,7 @@ function ScanDemo() {
   const b = scanned ? bracelets.find((x) => x.id === scanned) : null;
 
   function simulateRandom() {
+    if (!bracelets.length) return;
     const random = bracelets[Math.floor(Math.random() * bracelets.length)];
     setScanned(random.id);
     actions.scanEntree(random.id, lieu);
@@ -70,7 +84,7 @@ function ScanDemo() {
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-2 text-xs">
-                <Info k="Rôle" v={b.role} />
+                <Info k="Rôle" v={ROLE_LABELS[b.role] ?? b.role} />
                 <Info k="École" v={b.ecole} />
                 <Info k="Bus" v={b.bus ?? "—"} />
                 <Info k="Bungalow" v={b.bungalow ?? "—"} />

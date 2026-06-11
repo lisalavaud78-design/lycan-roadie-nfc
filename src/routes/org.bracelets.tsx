@@ -18,6 +18,7 @@ const ROLES: { value: Role; label: string; color: string }[] = [
   { value: "funbreak", label: "Funbreak", color: "bg-pink-500/20 text-pink-300" },
   { value: "vip", label: "VIP / invité", color: "bg-yellow-500/20 text-yellow-300" },
   { value: "prestataire", label: "Prestataire", color: "bg-gray-500/20 text-gray-300" },
+  { value: "bar", label: "Bar", color: "bg-amber-500/20 text-amber-300" },
 ];
 
 function Bracelets() {
