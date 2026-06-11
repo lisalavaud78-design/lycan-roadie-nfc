@@ -15,6 +15,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as OrgIndexRouteImport } from './routes/org.index'
 import { Route as LiveIndexRouteImport } from './routes/live.index'
 import { Route as WBraceletIdRouteImport } from './routes/w.$braceletId'
+import { Route as SBraceletIdRouteImport } from './routes/s.$braceletId'
 import { Route as OrgStaffRouteImport } from './routes/org.staff'
 import { Route as OrgSettingsRouteImport } from './routes/org.settings'
 import { Route as OrgScanRouteImport } from './routes/org.scan'
@@ -68,6 +69,11 @@ const LiveIndexRoute = LiveIndexRouteImport.update({
 const WBraceletIdRoute = WBraceletIdRouteImport.update({
   id: '/w/$braceletId',
   path: '/w/$braceletId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SBraceletIdRoute = SBraceletIdRouteImport.update({
+  id: '/s/$braceletId',
+  path: '/s/$braceletId',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OrgStaffRoute = OrgStaffRouteImport.update({
@@ -219,6 +225,7 @@ export interface FileRoutesByFullPath {
   '/org/scan': typeof OrgScanRoute
   '/org/settings': typeof OrgSettingsRoute
   '/org/staff': typeof OrgStaffRoute
+  '/s/$braceletId': typeof SBraceletIdRoute
   '/w/$braceletId': typeof WBraceletIdRoute
   '/live/': typeof LiveIndexRoute
   '/org/': typeof OrgIndexRoute
@@ -249,6 +256,7 @@ export interface FileRoutesByTo {
   '/org/scan': typeof OrgScanRoute
   '/org/settings': typeof OrgSettingsRoute
   '/org/staff': typeof OrgStaffRoute
+  '/s/$braceletId': typeof SBraceletIdRoute
   '/w/$braceletId': typeof WBraceletIdRoute
   '/live': typeof LiveIndexRoute
   '/org': typeof OrgIndexRoute
@@ -282,6 +290,7 @@ export interface FileRoutesById {
   '/org/scan': typeof OrgScanRoute
   '/org/settings': typeof OrgSettingsRoute
   '/org/staff': typeof OrgStaffRoute
+  '/s/$braceletId': typeof SBraceletIdRoute
   '/w/$braceletId': typeof WBraceletIdRoute
   '/live/': typeof LiveIndexRoute
   '/org/': typeof OrgIndexRoute
@@ -316,6 +325,7 @@ export interface FileRouteTypes {
     | '/org/scan'
     | '/org/settings'
     | '/org/staff'
+    | '/s/$braceletId'
     | '/w/$braceletId'
     | '/live/'
     | '/org/'
@@ -346,6 +356,7 @@ export interface FileRouteTypes {
     | '/org/scan'
     | '/org/settings'
     | '/org/staff'
+    | '/s/$braceletId'
     | '/w/$braceletId'
     | '/live'
     | '/org'
@@ -378,6 +389,7 @@ export interface FileRouteTypes {
     | '/org/scan'
     | '/org/settings'
     | '/org/staff'
+    | '/s/$braceletId'
     | '/w/$braceletId'
     | '/live/'
     | '/org/'
@@ -387,6 +399,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LiveRoute: typeof LiveRouteWithChildren
   OrgRoute: typeof OrgRouteWithChildren
+  SBraceletIdRoute: typeof SBraceletIdRoute
   WBraceletIdRoute: typeof WBraceletIdRoute
 }
 
@@ -432,6 +445,13 @@ declare module '@tanstack/react-router' {
       path: '/w/$braceletId'
       fullPath: '/w/$braceletId'
       preLoaderRoute: typeof WBraceletIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/s/$braceletId': {
+      id: '/s/$braceletId'
+      path: '/s/$braceletId'
+      fullPath: '/s/$braceletId'
+      preLoaderRoute: typeof SBraceletIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/org/staff': {
@@ -677,6 +697,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LiveRoute: LiveRouteWithChildren,
   OrgRoute: OrgRouteWithChildren,
+  SBraceletIdRoute: SBraceletIdRoute,
   WBraceletIdRoute: WBraceletIdRoute,
 }
 export const routeTree = rootRouteImport

@@ -36,7 +36,6 @@ function Devis() {
       "",
       `Coût par participant : ${q.coutParParticipant.toFixed(2)} €`,
       `Coût par bracelet : ${q.coutParBracelet.toFixed(2)} €`,
-      `Marge estimée : ${q.marge.toFixed(2)} €`,
     ].join("\n");
     const blob = new Blob([lines], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
@@ -90,11 +89,10 @@ function Devis() {
         </p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-3">
         <Kpi label="Options fixes" value={`${q.optionsFixes.toFixed(0)} €`} sub={`${q.activeModules.length} activées`} />
         <Kpi label={`Matière (×${q.totalBracelets})`} value={`${q.matiere.toFixed(0)} €`} sub={`${q.totalBracelets} bracelets`} />
         <Kpi label="Total TTC" value={`${q.totalTTC.toFixed(0)} €`} highlight />
-        <Kpi label="Marge estimée" value={`${q.marge.toFixed(0)} €`} />
       </div>
 
       <div className="glass rounded-2xl p-6">
@@ -180,14 +178,12 @@ function Devis() {
           <Line k="Total HT" v={`${q.totalHT.toFixed(2)} €`} />
           <Line k="TVA 20%" v={`${q.tva.toFixed(2)} €`} />
           <Line k="Total TTC" v={`${q.totalTTC.toFixed(2)} €`} highlight />
-          <Line k="Marge estimée" v={`${q.marge.toFixed(2)} €`} />
         </div>
         <div className="glass rounded-2xl p-6">
           <h3 className="display mb-3 text-lg">Indicateurs de répartition</h3>
           <Line k={`Coût par participant (${state.config.nbParticipants})`} v={`${q.coutParParticipant.toFixed(2)} €`} />
           <Line k={`Coût par bracelet (${q.totalBracelets})`} v={`${q.coutParBracelet.toFixed(2)} €`} />
           <Line k="Coût matière par bracelet" v={`${(q.matiere / Math.max(q.totalBracelets, 1)).toFixed(2)} €`} />
-          <Line k="Marge brute / bracelet" v={`${(q.marge / Math.max(q.totalBracelets, 1)).toFixed(2)} €`} />
           <p className="mt-3 text-xs text-muted-foreground">Indicateurs informatifs uniquement — les options ne sont pas refacturées par bracelet.</p>
         </div>
       </div>

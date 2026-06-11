@@ -438,10 +438,10 @@ function MedicalTab({ b }: any) {
     <Card title="Mes infos médicales" icon={<Heart className="h-5 w-5 text-electric" />}>
       <p className="text-xs text-muted-foreground mb-3">Visibles uniquement par le staff PAPS autorisé en cas d'urgence.</p>
       <div className="space-y-3">
-        <TA label="Allergies" v={m.allergies} on={(v) => actions.updateBracelet(b.id, { medical: { ...m, allergies: v } })} />
-        <TA label="Traitements" v={m.traitements} on={(v) => actions.updateBracelet(b.id, { medical: { ...m, traitements: v } })} />
-        <TA label="Pathologies" v={m.pathologies} on={(v) => actions.updateBracelet(b.id, { medical: { ...m, pathologies: v } })} />
-        <F label="Contact d'urgence" v={m.contactUrgence} on={(v) => actions.updateBracelet(b.id, { medical: { ...m, contactUrgence: v } })} />
+        <TA label="Allergies" v={m.allergies} on={(v: string) => actions.updateBracelet(b.id, { medical: { ...m, allergies: v } })} />
+        <TA label="Traitements" v={m.traitements} on={(v: string) => actions.updateBracelet(b.id, { medical: { ...m, traitements: v } })} />
+        <TA label="Pathologies" v={m.pathologies} on={(v: string) => actions.updateBracelet(b.id, { medical: { ...m, pathologies: v } })} />
+        <F label="Contact d'urgence" v={m.contactUrgence} on={(v: string) => actions.updateBracelet(b.id, { medical: { ...m, contactUrgence: v } })} />
         <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={m.consentement} onChange={(e) => actions.updateBracelet(b.id, { medical: { ...m, consentement: e.target.checked } })} className="h-4 w-4 accent-electric" />J'accepte que le PAPS consulte mes infos en cas d'urgence</label>
       </div>
     </Card>
