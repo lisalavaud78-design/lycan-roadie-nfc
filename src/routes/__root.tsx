@@ -29,7 +29,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "stylesheet", href: appCss },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap" },
+      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,600;0,700;0,800;0,900;1,800;1,900&family=Hanken+Grotesk:wght@500;600;700;800&display=swap" },
     ],
   }),
   shellComponent: RootShell,
@@ -55,7 +55,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="fr" className="dark">
+    <html lang="fr">
       <head><HeadContent /></head>
       <body>
         {children}
@@ -71,7 +71,7 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <WeiHydrator />
       <Outlet />
-      <Toaster theme="dark" position="top-right" />
+      <Toaster theme="light" position="top-right" />
     </QueryClientProvider>
   );
 }

@@ -19,26 +19,24 @@ function Home() {
   return (
     <div className="min-h-screen">
       {/* Hero */}
-      <section className="relative overflow-hidden px-6 pb-20 pt-16 md:pt-24">
-        <div className="absolute inset-0 -z-10">
-          <div className="absolute left-1/2 top-1/4 h-96 w-96 -translate-x-1/2 rounded-full bg-electric/20 blur-[120px]" />
-          <div className="absolute bottom-0 right-0 h-72 w-72 rounded-full bg-lycan/30 blur-[100px]" />
-        </div>
+      <section className="px-4 pb-20 pt-6 md:px-6 md:pt-10">
         <div className="mx-auto max-w-6xl">
-          <div className="flex items-center gap-3 text-xs uppercase tracking-[0.3em] text-electric">
-            <Music2 className="h-4 w-4" /> Highway to WEI · 5-8 sept. 2025 · Ty Nadan
+          <div className="relative overflow-hidden rounded-3xl border-2 border-(--ink) bg-electric p-7 hard-shadow md:p-12">
+            <div className="inline-flex items-center gap-2 rounded-full border-2 border-(--ink) bg-(--ink) px-3 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.16em] text-accent">
+              <Music2 className="h-3.5 w-3.5" /> Highway to WEI · 5-8 sept. 2025 · Ty Nadan
+            </div>
+            <h1 className="display mt-6 text-6xl leading-[0.9] text-white md:text-8xl">
+              LYCAN WEI
+              <br />
+              <span className="italic text-accent">version festival</span>
+            </h1>
+            <p className="mt-6 max-w-2xl text-lg font-semibold text-white/85">
+              Le WEI Lycan 2025 dans ta poche. Bracelets NFC, tickets conso, soirées, sécurité, médical — tout est connecté.
+              <span className="font-extrabold text-white"> 350 participants · 6 bus · 4 jours rock'n roll.</span>
+            </p>
           </div>
-          <h1 className="display mt-6 text-6xl leading-none md:text-8xl">
-            <span className="neon-text text-electric">LYCAN</span>
-            <span className="text-foreground"> WEI </span>
-            <span className="text-mist">NFC</span>
-          </h1>
-          <p className="mt-6 max-w-2xl text-lg text-muted-foreground">
-            Le WEI Lycan 2025 dans ta poche. Bracelets NFC, tickets conso, soirées, sécurité, médical — tout est connecté.
-            <span className="text-foreground"> 350 participants · 6 bus · 4 jours rock'n roll.</span>
-          </p>
 
-          <div className="mt-10 grid gap-4 md:grid-cols-3">
+          <div className="mt-8 grid gap-4 md:grid-cols-3">
             <SpaceCard
               to="/org"
               icon={<Zap className="h-6 w-6" />}
@@ -81,26 +79,26 @@ function SpaceCard({ to, params, icon, eyebrow, title, desc, highlight }: any) {
     <Link
       to={to}
       params={params}
-      className={`group relative overflow-hidden rounded-2xl border p-6 transition-all hover:-translate-y-1 ${
-        highlight ? "border-electric/60 gradient-electric text-black shadow-electric" : "glass hover:border-electric/40"
+      className={`group relative overflow-hidden rounded-2xl border-2 border-(--ink) p-6 transition-transform hover:-translate-y-1 hard-shadow ${
+        highlight ? "bg-accent text-(--ink)" : "bg-white text-(--ink)"
       }`}
     >
       <div className="flex items-center justify-between">
-        <div className={`rounded-lg p-2 ${highlight ? "bg-black/20" : "bg-electric/10 text-electric"}`}>{icon}</div>
-        <ArrowRight className="h-5 w-5 opacity-0 transition-all group-hover:translate-x-1 group-hover:opacity-100" />
+        <div className={`flex h-11 w-11 items-center justify-center rounded-xl border-2 border-(--ink) ${highlight ? "bg-(--ink) text-accent" : "bg-secondary text-(--ink)"}`}>{icon}</div>
+        <ArrowRight className="h-5 w-5 -translate-x-1 opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100" />
       </div>
-      <div className={`mt-4 text-xs uppercase tracking-widest ${highlight ? "text-black/70" : "text-electric"}`}>{eyebrow}</div>
+      <div className="mt-4 text-[11px] font-extrabold uppercase tracking-[0.14em] text-muted-foreground">{eyebrow}</div>
       <h3 className="display mt-1 text-2xl">{title}</h3>
-      <p className={`mt-2 text-sm ${highlight ? "text-black/80" : "text-muted-foreground"}`}>{desc}</p>
+      <p className="mt-2 text-sm font-medium text-muted-foreground">{desc}</p>
     </Link>
   );
 }
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="glass rounded-xl p-4">
-      <div className="text-xs uppercase tracking-widest text-muted-foreground">{label}</div>
-      <div className="display mt-1 text-3xl text-electric">{value}</div>
+    <div className="rounded-2xl border-2 border-(--ink) bg-white p-4 text-(--ink) hard-shadow-sm">
+      <div className="text-[11px] font-extrabold uppercase tracking-[0.12em] text-muted-foreground">{label}</div>
+      <div className="display mt-1 text-3xl">{value}</div>
     </div>
   );
 }

@@ -18,23 +18,23 @@ export function OrgShell({ children }: { children: ReactNode }) {
   ];
   return (
     <div className="min-h-screen">
-      <header className="glass sticky top-0 z-40 border-b">
+      <header className="sticky top-0 z-40 border-b-2 border-(--ink) bg-white">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
           <Link to="/" className="flex items-center gap-2">
-            <Zap className="h-5 w-5 text-electric" />
-            <span className="display text-xl">LYCAN <span className="text-electric">ORG</span></span>
+            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-(--ink) text-accent"><Zap className="h-4 w-4" /></span>
+            <span className="display text-xl tracking-tight">LYCAN <span className="text-electric italic">ORG</span></span>
           </Link>
-          <div className="flex gap-3 text-xs text-muted-foreground">
-            <Link to="/" className="hover:text-electric">Accueil</Link>
-            <Link to="/live" className="hover:text-electric">Live</Link>
+          <div className="flex gap-2 text-xs font-bold">
+            <Link to="/" className="rounded-full border-2 border-(--ink) bg-white px-3 py-1.5 hover:bg-muted">Accueil</Link>
+            <Link to="/live" className="rounded-full border-2 border-(--ink) bg-white px-3 py-1.5 hover:bg-muted">Live</Link>
           </div>
         </div>
-        <nav className="mx-auto flex max-w-7xl gap-1 overflow-x-auto px-4 pb-2">
+        <nav className="mx-auto flex max-w-7xl gap-1.5 overflow-x-auto px-4 pb-3">
           {tabs.map((t) => {
             const active = t.exact ? path === t.to : path.startsWith(t.to);
             return (
               <Link key={t.to} to={t.to}
-                className={`whitespace-nowrap rounded-md px-3 py-1.5 text-sm transition-colors ${active ? "gradient-electric font-semibold text-black" : "text-muted-foreground hover:text-foreground hover:bg-card"}`}>
+                className={`whitespace-nowrap rounded-full border-2 px-3.5 py-1.5 text-sm font-bold transition-colors ${active ? "border-(--ink) bg-accent text-(--ink)" : "border-transparent text-muted-foreground hover:border-(--ink) hover:bg-white hover:text-(--ink)"}`}>
                 {t.label}
               </Link>
             );
@@ -68,27 +68,27 @@ export function LiveShell({ children }: { children: ReactNode }) {
   ];
   return (
     <div className="min-h-screen">
-      <header className="glass sticky top-0 z-40 border-b">
+      <header className="sticky top-0 z-40 border-b-2 border-(--ink) bg-white">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
           <Link to="/" className="flex items-center gap-2">
-            <div className="relative">
-              <Zap className="h-5 w-5 text-electric" />
-              <span className="absolute -right-1 -top-1 h-2 w-2 animate-pulse rounded-full bg-danger" />
-            </div>
-            <span className="display text-xl">LYCAN <span className="text-electric">LIVE</span></span>
+            <span className="relative flex h-8 w-8 items-center justify-center rounded-full bg-(--ink) text-accent">
+              <Zap className="h-4 w-4" />
+              <span className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 animate-pulse rounded-full border-2 border-white bg-danger" />
+            </span>
+            <span className="display text-xl tracking-tight">LYCAN <span className="text-electric italic">LIVE</span></span>
           </Link>
-          <div className="flex items-center gap-3 text-xs">
-            <span className="flex items-center gap-1.5 text-success"><span className="h-2 w-2 animate-pulse rounded-full bg-success" />En direct</span>
-            <Link to="/" className="text-muted-foreground hover:text-electric">Accueil</Link>
-            <Link to="/org" className="text-muted-foreground hover:text-electric">Org</Link>
+          <div className="flex items-center gap-2 text-xs font-bold">
+            <span className="flex items-center gap-1.5 rounded-full border-2 border-(--ink) bg-success px-3 py-1.5 text-white"><span className="h-2 w-2 animate-pulse rounded-full bg-white" />En direct</span>
+            <Link to="/" className="rounded-full border-2 border-(--ink) bg-white px-3 py-1.5 hover:bg-muted">Accueil</Link>
+            <Link to="/org" className="rounded-full border-2 border-(--ink) bg-white px-3 py-1.5 hover:bg-muted">Org</Link>
           </div>
         </div>
-        <nav className="mx-auto flex max-w-7xl gap-1 overflow-x-auto px-4 pb-2">
+        <nav className="mx-auto flex max-w-7xl gap-1.5 overflow-x-auto px-4 pb-3">
           {tabs.map((t) => {
             const active = t.exact ? path === t.to : path.startsWith(t.to);
             return (
               <Link key={t.to} to={t.to}
-                className={`whitespace-nowrap rounded-md px-3 py-1.5 text-sm transition-colors ${active ? "gradient-electric font-semibold text-black" : "text-muted-foreground hover:text-foreground hover:bg-card"}`}>
+                className={`whitespace-nowrap rounded-full border-2 px-3.5 py-1.5 text-sm font-bold transition-colors ${active ? "border-(--ink) bg-accent text-(--ink)" : "border-transparent text-muted-foreground hover:border-(--ink) hover:bg-white hover:text-(--ink)"}`}>
                 {t.label}
               </Link>
             );
